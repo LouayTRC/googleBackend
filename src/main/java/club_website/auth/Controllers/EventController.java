@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import club_website.auth.Models.Event;
+import club_website.auth.Models.MemberEvent;
 import club_website.auth.Services.EventService;
+import club_website.auth.Services.MemberEventService;
 
 
 
@@ -24,6 +27,9 @@ public class EventController {
 	
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private MemberEventService memberEventService;
 	
 	
 	@GetMapping("/{id}")
@@ -37,12 +43,32 @@ public class EventController {
 	}
 	
 	@PostMapping()
-	public Event addEvent(@RequestBody  Event e){
-		return eventService.addEvent(e);
+	public Event addEvent(@RequestBody  Event e,@RequestHeader("Authorization") String token){
+		return eventService.addEvent(e,token.substring(7));
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteEvent(@PathVariable Integer id) {
-		eventService.deleteEvent(id);
+	public void deleteEvent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+		eventService.deleteEvent(id,token.substring(7));
+	}
+	
+	@PutMapping("{id}")
+	public Event updateEvent(@PathVariable Integer id,@RequestBody Event e,@RequestHeader("Authorization") String token) {
+		return eventService.updateEvent(id,e,token.substring(7));
+	}
+	
+	@PutMapping("/present/{id}")
+	public MemberEvent memberPresent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+		return memberEventService.memberPresent(id,token.substring(7));
+	}
+	
+	@PutMapping("/absent/{id}")
+	public MemberEvent memberAbsent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+		return memberEventService.memberAbsent(id,token.substring(7));
+	}
+	
+	@GetMapping("/presence/{id}")
+	public List<MemberEvent> getPresence(@PathVariable Integer id) {
+		return memberEventService.getPresence(id);
 	}
 }

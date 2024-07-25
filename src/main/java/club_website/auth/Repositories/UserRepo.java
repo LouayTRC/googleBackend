@@ -10,5 +10,4 @@ import club_website.auth.Models.User;
 
 public interface UserRepo extends JpaRepository<User,Integer>{
 	Optional<User> findByUsername(String username);
-	public List<User> findByDepartments(Department dep);
 }

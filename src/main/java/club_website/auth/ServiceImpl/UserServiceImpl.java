@@ -1,61 +1,56 @@
 package club_website.auth.ServiceImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import club_website.auth.Models.Admin;
 import club_website.auth.Models.Department;
+import club_website.auth.Models.Event;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.User;
+import club_website.auth.Repositories.AdminRepo;
+import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.UserService;
+
 @Service
 public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private MemberRepo memberRepo;
+	
+	@Autowired 
+	private AdminRepo adminRepo;
 
 	@Override
 	public List<Member> getAllMembers() {
 		// TODO Auto-generated method stub
-		System.out.println("here");
-		List<User> users=userRepo.findAll();
-		System.out.println(users);
-		List<Member> members=new ArrayList<>();
-		for(User u:users) {
-			
-			if(u.hasAuthority("MEMBER")) {
-				members.add((Member)u);
-			}
-		}
+		return memberRepo.findAll();
+	}
+	
+	@Override
+	public List<Admin> getAllAdmins() {
+		// TODO Auto-generated method stub
+		return adminRepo.findAll();
+	}
+	
+	
+	@Override
+	public List<Member> getMembersByDepart(Department department) {
+		// TODO Auto-generated method stub
+		List<Member> members=memberRepo.findByDepartments(department);
+		System.out.println(members);
 		return members;
-	}
-	
-	@Override
-	public List<User> getAllAdmins() {
-		// TODO Auto-generated method stub
-		System.out.println("here");
-		List<User> users=userRepo.findAll();
-		System.out.println(users);
-		List<User> admins=new ArrayList<>();
-		for(User u:users) {
-			
-			if(u.hasAuthority("ADMIN")) {
-				admins.add(u);
-			}
-		}
-		return admins;
-	}
-	
-	
-	@Override
-	public List<User> getUsersByDepart(Department department) {
-		// TODO Auto-generated method stub
-		List<User> users=userRepo.findByDepartments(department);
-		System.out.println(users);
-		return users;
 	}
 
 	@Override
@@ -76,6 +71,42 @@ public class UserServiceImpl implements UserService{
 		}
 		
 	}
+
+	@Override
+	public Set<Member> getMembersByEvent(Event e) {
+		// TODO Auto-generated method stub
+		Set<Member> members=new HashSet<>();
+		for(Department dep:e.getDepartments()) {
+			members.addAll(memberRepo.findByDepartments(dep));
+		}
+		return members;
+	}
+
+	@Override
+	public List<Member> getLeaderBoard() {
+		// TODO Auto-generated method stub
+		List<Member> members=memberRepo.findAll();
+		Collections.sort(members);
+		return members;
+	}
+
+	@Override
+	public void activateMember(Integer id) {
+		// TODO Auto-generated method stub
+		try {
+			User u=userRepo.findById(id).get();
+			
+			u.setEnabled(true);
+			userRepo.save(u);
+			System.out.println("account activated");
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("cannot activate account");
+		}
+		
+		
+	}
+	
 	
 	
 	

@@ -1,27 +1,34 @@
 package club_website.auth.ServiceImpl;
 
 
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import club_website.auth.Models.User;
+import club_website.auth.Models.VerificationToken;
 import club_website.auth.Config.JwtService;
+import club_website.auth.Models.Admin;
 import club_website.auth.Models.AuthenticationRequest;
 import club_website.auth.Models.AuthenticationResponse;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.RegisterRequest;
 import club_website.auth.Models.Role;
+import club_website.auth.Repositories.AdminRepo;
 import club_website.auth.Repositories.DepartmentRepo;
 import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.AuthService;
+import club_website.auth.Services.StorageService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,41 +38,45 @@ public class AuthServiceImpl implements AuthService{
 	private final UserRepo userRepo;
 	private final RoleRepo roleRepo;
 	private final MemberRepo memberRepo;
+	private final AdminRepo adminRepo;
 	private final DepartmentRepo departmentRepo;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
-	
+	private final StorageService storageService;
 	
 	@Override
 	public AuthenticationResponse register(RegisterRequest request) {
 		// TODO Auto-generated method stub
-		System.out.println("req"+request);
+//		System.out.println("req"+request);
+//		String imagePath = null;
+//	    if (request.getPdp() != null && !request.getPdp().isEmpty()) {
+//	        imagePath = storageService.uploadImage(request.getPdp());
+//	    }
+	    
 		var user=User.builder()
 				.fullname(request.getFullname())
 				.username(request.getUsername())
 				.mail(request.getMail())
 				.password(passwordEncoder.encode(request.getPassword()))
-				.pdp(request.getPdp())
+				.pdp("")
 				.build();
 		
 		Set<Role> userRoles = new HashSet<>();
-        for (Role role : request.getRoles()) {
-            Role existingRole =roleRepo.findById(role.getId()).orElseThrow();
-            System.out.println(existingRole);
-            userRoles.add(existingRole);
-        }
+		Role existingRole =roleRepo.findByName("MEMBER");
+		userRoles.add(existingRole);
         user.setRoles(userRoles);
         
-        Set<Department> userDeps = new HashSet<>();
+        Set<Department> memberDeps = new HashSet<>();
         for (Department dep : request.getDepartments()) {
         	Department existingDep =departmentRepo.findById(dep.getId()).orElseThrow();
         	 System.out.println(existingDep);
-        	userDeps.add(existingDep);
+        	 memberDeps.add(existingDep);
         }
-        user.setDepartments(userDeps);
         System.out.println(user);
-		userRepo.save(user);
+		User userRes=userRepo.save(user);
+		Member m=Member.builder().user(userRes).departments(memberDeps).build();
+		memberRepo.save(m);
 		var jwtToken=jwtService.generateToken(user);
 		return AuthenticationResponse.builder().token(jwtToken).build();
 	}
@@ -78,7 +89,69 @@ public class AuthServiceImpl implements AuthService{
 		);
 		var user=userRepo.findByUsername(request.getUsername()).orElseThrow();
 		var jwtToken=jwtService.generateToken(user);
-		return AuthenticationResponse.builder().token(jwtToken).build();
+		return AuthenticationResponse.builder().token(jwtToken).user(user).build();
 	}
 
+	@Override
+	public VerificationToken verifyToken(String token) {
+		// TODO Auto-generated method stub
+		try {
+			
+		
+		String username=jwtService.extractUsername(token);
+		System.out.println("username"+username);
+		Optional<User> user=userRepo.findByUsername(username);
+		System.out.println("user"+user.get());
+		if(user.isPresent() && jwtService.isTokenValid(token, user.get())) {
+			return VerificationToken.builder().user(user.get()).loggedIn(true).build();		
+		}
+		else {
+			return VerificationToken.builder().user(null).loggedIn(false).build();
+		}
+		} catch (Exception e) {
+			return VerificationToken.builder().user(null).loggedIn(false).build();
+		}
+	}
+	
+	@Override
+	public AuthenticationResponse addAdmin(RegisterRequest request) {
+		// TODO Auto-generated method stub
+		System.out.println("req2"+request);
+		var user=User.builder()
+				.fullname(request.getFullname())
+				.username(request.getUsername())
+				.mail(request.getMail())
+				.password(passwordEncoder.encode(request.getPassword()))
+				.pdp("")
+				.build();
+		
+		Set<Role> userRoles = new HashSet<>();
+		for(Role r:request.getRoles()) {
+			Role existingRole =roleRepo.findById(r.getId()).get();
+			userRoles.add(existingRole);
+		}
+        user.setRoles(userRoles);
+        User userRes=userRepo.save(user);
+        System.out.println("user"+userRes);
+        System.out.println(user.getAuthorities());
+        if(user.hasAuthority("MEMBER")) {
+        	
+        	Set<Department> memberDeps = new HashSet<>();
+            for (Department dep : departmentRepo.findAll()) {
+            	 memberDeps.add(dep);
+            }
+            Member m=Member.builder().user(userRes).departments(memberDeps).build();
+            System.out.println(m);
+    		memberRepo.save(m);
+        }
+        
+        Admin admin=Admin.builder().user(userRes).createdAt(new Date()).build();
+        adminRepo.save(admin);
+		
+		
+		var jwtToken=jwtService.generateToken(user);
+		return AuthenticationResponse.builder().token(jwtToken).build();
+	}
+	
+	
 }

@@ -31,12 +31,12 @@ public class JwtService {
 				.setClaims(extraClaims)
 				.setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis()+ 1000 *60 *24))
+				.setExpiration(new Date(System.currentTimeMillis()+ 1000 *60 *24 * 60))
 				.signWith(getSigningKey(),SignatureAlgorithm.HS256)
 				.compact();
 	}
 	
-	public String extractUsername(String token) {
+	public String extractUsername(String token)	 {
 		// TODO Auto-generated method stub
 		return extractClaim(token, Claims::getSubject);
 	}

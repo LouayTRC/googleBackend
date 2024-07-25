@@ -1,9 +1,15 @@
 package club_website.auth.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
+import org.springframework.cglib.core.Local;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +18,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.*;
 
 @Getter
@@ -33,27 +41,32 @@ public class Work implements Serializable {
     private String url = "";
 
     @Builder.Default
-    private double score = 0;
+    private double note = 0;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
-    @JsonBackReference("task_work")
+//    @JsonBackReference("task_work")
+    @JsonIgnoreProperties({"works","createdBy","updatedBy","deletedBy"})
     private Task task;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference("user_work")
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+//    @JsonBackReference("user_work")
+    @JsonIgnoreProperties({"department", "works"})
+    private Member member;
 
     @Builder.Default
-    private Date dateDepos = new Date();
+    private LocalDate dateDepo = LocalDate.now();
 
     @Builder.Default
     private boolean status = true;
+    
+    
+    @ManyToOne()
+    @JoinColumn(name = "update_by_id")
+	private Admin updatedBy;
+	
+	
+	private LocalDate updatedAt;
 
-    @Override
-    public String toString() {
-        return "Work [id=" + id + ", url=" + url + ", score=" + score + ", user=" + user + ", dateDepos=" + dateDepos
-                + ", status=" + status + "]";
-    }
 }

@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,6 +32,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name="department")
+@ToString
 public class Department implements Serializable {
 
     private static final long serialVersionUID = 2860L;
@@ -39,17 +43,20 @@ public class Department implements Serializable {
     private Integer id;
     private String name;
 
-    @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)
-    @JsonBackReference("user_department")
-    private Set<User> users = new HashSet<>();
+    @ManyToMany(mappedBy = "departments", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Member> members = new HashSet<>();
   
-    @ManyToMany(mappedBy = "departmentss", fetch = FetchType.LAZY)
-    @JsonBackReference("event_department")
+
+    @ManyToMany(mappedBy = "departments", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+//    @JsonIgnoreProperties("departments")
+    @JsonIgnore
     private Set<Event> events = new HashSet<>();
     
     
-    @OneToMany(mappedBy = "department")
-    @JsonManagedReference("task_dep")
+    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"department", "works"})
+//    @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 
 }

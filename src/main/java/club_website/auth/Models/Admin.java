@@ -2,62 +2,53 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.util.Collection;
-
+import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-public class Admin extends User implements Serializable{
+@Table(name="Admin")
+public class Admin implements Serializable{
 	
 	private static final long serialVersionUID = 2060L;
 	
 	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return super.getAuthorities();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return super.isAccountNonExpired();
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return super.isAccountNonLocked();
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return super.isCredentialsNonExpired();
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return super.isEnabled();
-	}
-
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return super.getPassword();
-	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return super.getUsername();
-	}
+	@Id
+    @Column(name = "admin_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer admin_id;
+	
+	@OneToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+	@JsonIgnoreProperties("admin")
+    private User user;
+	
+	private Date createdAt;
+	private Admin createdBy;
 	
 	
 }

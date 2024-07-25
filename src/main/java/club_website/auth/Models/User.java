@@ -10,8 +10,15 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,22 +29,29 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "User")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 2968060L;
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String fullname;
+    
+    @Column(unique = true)
     private String username;
+    
+    @Column(unique = true)
     private String mail;
+    
     private String password;
     private String pdp;
+ 
+    
 
-    @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -45,20 +59,21 @@ public class User implements UserDetails, Serializable {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_departments",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "department_id")
-    )
-    @JsonManagedReference("user_department")
-    private Set<Department> departments = new HashSet<>();
+    
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference("user_work")
-    private List<Work> works;
-
+    @OneToOne(mappedBy ="user")
+    @Nullable
+    @JsonIgnoreProperties("user")
+    private Member member;
+    
+    @OneToOne(mappedBy ="user")
+    @Nullable
+    @JsonIgnoreProperties("user")
+    private Admin admin;
+    
+    private boolean enabled;
+    
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = this.getRoles();
@@ -70,17 +85,15 @@ public class User implements UserDetails, Serializable {
 
         return authorities;
     }
-
+    
+    @JsonProperty("roles")
     private Set<Role> getRoles() {
         return roles;
     }
 
-    public boolean hasDepart(Integer idDep) {
-        return departments.stream().anyMatch(department -> department.getId().equals(idDep));
-    }
 
     public boolean hasAuthority(String authority) {
-        return getAuthorities().stream().anyMatch(auth -> auth.equals(authority));
+    	return getRoles().stream().map(Role::getName).anyMatch(roleName -> roleName.equals(authority));
     }
 
     @Override
@@ -100,7 +113,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override
@@ -112,4 +125,6 @@ public class User implements UserDetails, Serializable {
     public String getUsername() {
         return username;
     }
+    
+    
 }
