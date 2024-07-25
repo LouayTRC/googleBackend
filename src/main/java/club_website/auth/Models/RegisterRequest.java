@@ -27,6 +27,6 @@ public class RegisterRequest {
 	private Set<Role> roles;
 	private Set<Department> departments;
 	private String password;
-	private MultipartFile pdp;
+	private String pdp;
 
 }

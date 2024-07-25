@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -105,6 +106,16 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		
+	}
+
+	@Override
+	public Admin getAdminByUsername(String username) {
+		// TODO Auto-generated method stub
+		Optional<User> user=userRepo.findByUsername(username);
+		if(user.isPresent()) {
+			return adminRepo.findByUser(user.get());
+		}
+		return null;
 	}
 	
 	

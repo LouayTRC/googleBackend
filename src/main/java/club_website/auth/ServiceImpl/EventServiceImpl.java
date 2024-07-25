@@ -1,5 +1,6 @@
 package club_website.auth.ServiceImpl;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +52,6 @@ public class EventServiceImpl implements EventService{
 	public Event addEvent(Event e,String token) {
 		// TODO Auto-generated method stub
 		try {
-			System.out.println("e"+e);
 			String username=jwtService.extractUsername(token);
 			User u=userRepo.findByUsername(username).get();
 			
@@ -61,8 +61,8 @@ public class EventServiceImpl implements EventService{
 	        	 EventDeps.add(existingDep);
 	        }
 	        e.setDepartments(EventDeps);
-	        e.setCreatedAt(new Date());
-	        e.setCreatedBy(u);
+	        e.setCreatedAt(LocalDate.now());
+	        e.setCreatedBy(u.getAdmin());
 	        e=eventRepo.save(e);
 	        List<MemberEvent> memberEvents=presenceService.addPresence(e);
 	        e.setPresenceList(memberEvents);
@@ -93,7 +93,7 @@ public class EventServiceImpl implements EventService{
 	@Override
 	public Event updateStatus(Event e) {
 		// TODO Auto-generated method stub
-		if(e.getDateEvent().before(new Date())) {
+		if(e.getDateEvent().isBefore(LocalDate.now())) {
 			e.setStatus(false);
 			e=eventRepo.save(e);
 		}
@@ -110,8 +110,8 @@ public class EventServiceImpl implements EventService{
 			Event event = eventRepo.findById(id).orElseThrow(() -> new RuntimeException("Event not found"));
 	        
 			event.setDeleted(true);
-			event.setDeletedAt(new Date());
-			event.setDeletedBy(u);
+			event.setDeletedAt(LocalDate.now());
+			event.setDeletedBy(u.getAdmin());
 			eventRepo.save(event);
 		}
 		catch (Exception e) {
@@ -149,8 +149,8 @@ public class EventServiceImpl implements EventService{
 			e.setDescription(event.getDescription());
 			
 			
-			e.setUpdatedAt(new Date());
-			e.setUpdatedBy(u);
+			e.setUpdatedAt(LocalDate.now());
+			e.setUpdatedBy(u.getAdmin());
 			return eventRepo.save(e);
 		}
 		catch (Exception e) {

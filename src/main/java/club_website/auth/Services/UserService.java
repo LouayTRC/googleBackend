@@ -16,6 +16,7 @@ public interface UserService {
 	public List<Member> getLeaderBoard();
 	public List<User> getAllUsers();
 	public List<Admin> getAllAdmins();
+	public Admin getAdminByUsername(String username);
 	public List<Member> getMembersByDepart(Department dep);
 	public Set<Member> getMembersByEvent(Event e);
 	public void deleteUser(Integer id);

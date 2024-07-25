@@ -1,11 +1,13 @@
 package club_website.auth.ServiceImpl;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,7 @@ import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.AuthService;
 import club_website.auth.Services.StorageService;
+import club_website.auth.Services.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,6 +42,7 @@ public class AuthServiceImpl implements AuthService{
 	private final RoleRepo roleRepo;
 	private final MemberRepo memberRepo;
 	private final AdminRepo adminRepo;
+	private final UserService userService;
 	private final DepartmentRepo departmentRepo;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
@@ -53,6 +57,7 @@ public class AuthServiceImpl implements AuthService{
 //	    if (request.getPdp() != null && !request.getPdp().isEmpty()) {
 //	        imagePath = storageService.uploadImage(request.getPdp());
 //	    }
+		
 	    
 		var user=User.builder()
 				.fullname(request.getFullname())
@@ -114,9 +119,14 @@ public class AuthServiceImpl implements AuthService{
 	}
 	
 	@Override
-	public AuthenticationResponse addAdmin(RegisterRequest request) {
+	public AuthenticationResponse addAdmin(RegisterRequest request,String token) {
 		// TODO Auto-generated method stub
 		System.out.println("req2"+request);
+		
+		 String username=jwtService.extractUsername(token);
+	     Admin creator=userService.getAdminByUsername(username);
+	        
+	        
 		var user=User.builder()
 				.fullname(request.getFullname())
 				.username(request.getUsername())
@@ -128,9 +138,21 @@ public class AuthServiceImpl implements AuthService{
 		Set<Role> userRoles = new HashSet<>();
 		for(Role r:request.getRoles()) {
 			Role existingRole =roleRepo.findById(r.getId()).get();
-			userRoles.add(existingRole);
+			if(!existingRole.getName().equals("OWNER")) {
+				if(!existingRole.getName().equals("SUPER ADMIN")) {
+					userRoles.add(existingRole);
+				}
+				else {
+					if(creator.getUser().hasAuthority("OWNER")) {
+						userRoles.add(existingRole);
+					}
+				}
+			}
 		}
+		
+		System.out.println("roles"+userRoles);
         user.setRoles(userRoles);
+        user.setEnabled(true);
         User userRes=userRepo.save(user);
         System.out.println("user"+userRes);
         System.out.println(user.getAuthorities());
@@ -145,7 +167,10 @@ public class AuthServiceImpl implements AuthService{
     		memberRepo.save(m);
         }
         
-        Admin admin=Admin.builder().user(userRes).createdAt(new Date()).build();
+       
+        
+        Admin admin=Admin.builder().user(userRes).createdAt(LocalDate.now()).createdBy(creator).build();
+        System.out.println("adlun"+admin);
         adminRepo.save(admin);
 		
 		

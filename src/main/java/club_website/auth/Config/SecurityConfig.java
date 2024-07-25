@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig{
 	
@@ -26,9 +28,9 @@ public class SecurityConfig{
 			.csrf()
 			.disable()
 			.authorizeHttpRequests()
-			.requestMatchers("/api/auth/**","/api/role/**","/api/event/**","/api/task/**","/api/dep/**","/api/user/**","/api/work/**","/api/ms/**")
+			.requestMatchers("/api/auth/**","/api/app/add","/api/dep")
 			.permitAll()
-//			.requestMatchers("/api/event/**").hasAuthority("ADMIN")
+			.requestMatchers("/api/role/**").hasAuthority("SUPER ADMIN")
 			.anyRequest()
 			.authenticated()
 			.and()

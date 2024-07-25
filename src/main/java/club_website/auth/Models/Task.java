@@ -1,6 +1,7 @@
 package club_website.auth.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,21 +75,21 @@ public class Task implements Serializable {
     @JoinColumn(name = "created_by_id")
 	private Admin createdBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date cratedAt;
+
+	private LocalDate cratedAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "deleted_by_id")
 	private Admin deletedBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date deletedAt;
+
+	private LocalDate deletedAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "update_by_id")
 	private Admin updatedBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
+
+	private LocalDate updatedAt;
 	
 }

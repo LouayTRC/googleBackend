@@ -1,5 +1,6 @@
 package club_website.auth.ServiceImpl;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +61,7 @@ public class TaskServiceImpl implements TaskService{
 	    		t.setDepartment(dep);
 	    	    t.setDateCreation(new Date());
 	    	    
-	    	    t.setCratedAt(new Date());
+	    	    t.setCratedAt(LocalDate.now());
 	    	    t.setCreatedBy(u.getAdmin());
 	    	    
 	    	    
@@ -103,7 +104,7 @@ public class TaskServiceImpl implements TaskService{
 			Task task = taskRepo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 			
 			task.setDeleted(true);
-			task.setDeletedAt(new Date());
+			task.setDeletedAt(LocalDate.now());
 			task.setDeletedBy(u.getAdmin());
 			taskRepo.save(task);
 			System.out.println("suppression effectue");	
@@ -148,7 +149,7 @@ public class TaskServiceImpl implements TaskService{
 			t.setDescription(task.getDescription());
 			t.setTitle(task.getTitle());
 			
-			t.setUpdatedAt(new Date());
+			t.setUpdatedAt(LocalDate.now());
 			t.setUpdatedBy(u.getAdmin());
 			
 			return taskRepo.save(t);

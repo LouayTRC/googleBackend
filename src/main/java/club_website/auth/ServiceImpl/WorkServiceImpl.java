@@ -102,6 +102,11 @@ public class WorkServiceImpl implements WorkService{
 			String username=jwtService.extractUsername(token);
 			User u=userRepo.findByUsername(username).get();
 			Work work=getWorkById(id);
+			System.out.println(work!=null);
+			System.out.println(work.isStatus());
+			System.out.println(work.getTask().isStatus());
+			System.out.println(work.getMember().getUser().getId()==u.getId());
+			System.out.println(!work.getTask().isDeleted());
 			if(work!=null && work.isStatus() && work.getTask().isStatus() && work.getMember().getUser().getId()==u.getId() && !work.getTask().isDeleted() ) {
 				work.setUrl(url);
 				work.setStatus(false);
@@ -120,15 +125,10 @@ public class WorkServiceImpl implements WorkService{
 	public Work updateNote(Integer id,double note,String token) {
 		// TODO Auto-generated method stub
 		try {
-			System.out.println("here'");
 			String username=jwtService.extractUsername(token);
-			System.out.println("isername"+username);
 			User u=userRepo.findByUsername(username).get();
-			System.out.println("iser"+u);
 			Work work=getWorkById(id);
-			System.out.println("work"+work);
-			
-			if(work!=null  && !work.getUrl().equals("") && work.getTask().isStatus() ) {
+			if(work!=null  && !work.getUrl().equals("") ) {
 				work.setNote(note);
 				work.setUpdatedAt(LocalDate.now());
 				work.setUpdatedBy(u.getAdmin());

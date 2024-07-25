@@ -1,7 +1,9 @@
 package club_website.auth.Config;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +63,19 @@ public class ProjectSeeder implements ApplicationRunner {
 				roles.add(roleRepo.findByName("ADMIN"));
 			}
 			
+			
 			if (!roleRepo.existsByName("MEMBER")) {
 				Role r2 = Role.builder().name("MEMBER").build();
 				roles.add(roleRepo.save(r2));
 			} else {
 				roles.add(roleRepo.findByName("MEMBER"));
+			}
+			
+			if (!roleRepo.existsByName("OWNER")) {
+				Role r1 = Role.builder().name("OWNER").build();
+				roles.add(roleRepo.save(r1));
+			} else {
+				roles.add(roleRepo.findByName("OWNER"));
 			}
 			
 			if (!roleRepo.existsByName("SUPER ADMIN")) {
@@ -97,41 +107,48 @@ public class ProjectSeeder implements ApplicationRunner {
 				deps.add(departmentRepo.findByName("Rh"));
 			}
 			
-			var user=User.builder()
-					.fullname("louay tarchoun")
-					.username("louuu")
-					.mail("louaytrc@gmail.com")
-					.password(passwordEncoder.encode("louuu"))
-					.pdp("test")
-					.enabled(true)
-					.build();
+			Optional<User> userBD=userRepo.findByUsername("louuu");
 			
-	        user.setRoles(roles);
-	        User userRes=userRepo.save(user);
-	        System.out.println("user"+userRes);
-	       	
-        	Set<Department> memberDeps = new HashSet<>();
-            for (Department dep : departmentRepo.findAll()) {
-            	 memberDeps.add(dep);
-            }
-            
-            User res=userRepo.findByUsername(user.getUsername()).get();
-            System.out.println("usr"+res);
-            
-            
-            Member m=Member.builder().user(res).departments(memberDeps).build();
-            System.out.println("mem"+m);
-    		memberRepo.save(m);
+			if(!userBD.isPresent()) {
+				var user=User.builder()
+						.fullname("louay tarchoun")
+						.username("louuu")
+						.mail("louaytrc@gmail.com")
+						.password(passwordEncoder.encode("louuu"))
+						.pdp("test")
+						.enabled(true)
+						.build();
+				
+		        user.setRoles(roles);
+		        User userRes=userRepo.save(user);
+		        System.out.println("user"+userRes);
+		       	
+	        	Set<Department> memberDeps = new HashSet<>();
+	            for (Department dep : departmentRepo.findAll()) {
+	            	 memberDeps.add(dep);
+	            }
+	            
+	            User res=userRepo.findByUsername(user.getUsername()).get();
+	            System.out.println("usr"+res);
+	            
+	            
+	            Member m=Member.builder().user(res).departments(memberDeps).build();
+	            System.out.println("mem"+m);
+	    		memberRepo.save(m);
 
-	        
-	        Admin admin=Admin.builder().user(userRes).createdAt(new Date()).build();
-	        adminRepo.save(admin);
-	
-			System.out.println("Admin user created successfully !");
-		} catch (Exception e) {
-			System.err.println("Failed to create admin user: " + e.getMessage());
-		}
+		        
+		        Admin admin=Admin.builder().user(userRes).createdAt(LocalDate.now()).build();
+		        adminRepo.save(admin);
 		
-		System.out.println("Seeding completed!");
+				System.out.println("Owner created successfully !");
+
+			}
+			
+			System.out.println("Seeding Completed !");
+			
+		} catch (Exception e) {
+			System.err.println("error : " + e.getMessage());
+		}
 	}
+	
 }

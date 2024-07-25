@@ -9,5 +9,5 @@ import club_website.auth.Models.Application;
 public interface ApplicationService {
 	public Application addApp(Application app);
 	public List<Application> getApplications();
-	public Application updateStatus(Integer id,Integer status);
+	public Application updateStatus(Integer id,Integer status,String token);
 }

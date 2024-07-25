@@ -16,6 +16,8 @@ import club_website.auth.Models.Work;
 public interface WorkRepo extends JpaRepository<Work, Integer>{
 	
 	public List<Work> findByTask(Task task);
+	
+	@Query("SELECT w FROM Work w JOIN w.task t WHERE w.member = :member AND t.deleted = false")
 	public List<Work> findByMember(Member member);
 
 	@Query("SELECT w FROM Work w WHERE w.member = :member AND w.dateDepo BETWEEN :startDate AND :endDate")
@@ -25,4 +27,6 @@ public interface WorkRepo extends JpaRepository<Work, Integer>{
 
 	@Query("SELECT w FROM Work w JOIN w.task t WHERE t.deleted = false")
     public List<Work> findAllWorks();
+	
+	
 }

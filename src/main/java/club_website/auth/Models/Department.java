@@ -1,6 +1,7 @@
 package club_website.auth.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,9 +21,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.*;
 
 @Getter
@@ -38,7 +43,7 @@ public class Department implements Serializable {
     private static final long serialVersionUID = 2860L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")
     private Integer id;
     private String name;
@@ -58,5 +63,6 @@ public class Department implements Serializable {
     @JsonIgnoreProperties({"department", "works"})
 //    @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
+    
 
 }

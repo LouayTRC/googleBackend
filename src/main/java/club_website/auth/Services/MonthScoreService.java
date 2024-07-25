@@ -11,6 +11,6 @@ import club_website.auth.Models.MonthScore;
 public interface MonthScoreService {
 	public void addMonthScore();
 	
-	public MonthScore updateMonthScore(Integer id,MonthScore ms);
-	public List<MonthScore> getMsByMember(Integer id);
+	public MonthScore updateMonthScore(Integer id,MonthScore ms,String token);
+	public List<MonthScore> getMsByMember(String token);
 }

@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import club_website.auth.Config.JwtService;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.MonthScore;
+import club_website.auth.Models.User;
 import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.MonthScoreRepo;
+import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.MonthScoreService;
 import club_website.auth.Services.WorkService;
 
@@ -28,6 +31,12 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	
 	@Autowired
 	private WorkService workService;
+	
+	@Autowired
+	private JwtService jwtService;
+	
+	@Autowired
+	private UserRepo userRepo;
 
 	@Override
 	@Scheduled(cron = "1 0 0 1 * *", zone = "Africa/Tunis")
@@ -64,13 +73,18 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	}
 
 	@Override
-	public MonthScore updateMonthScore(Integer id, MonthScore ms) {
+	public MonthScore updateMonthScore(Integer id, MonthScore ms,String token) {
 		// TODO Auto-generated method stub
 		try {
+			String username=jwtService.extractUsername(token);
+			User user=userRepo.findByUsername(username).get();
+			
 			MonthScore msf=monthScoreRepo.findById(id).get();
 			msf.setContribution(ms.getContribution());
 			msf.setDiscipline(ms.getDiscipline());
 			msf.setScore(msf.calculScore());
+			msf.setUpdatedAt(LocalDate.now());
+			msf.setUpdatedBy(user.getAdmin());
 			msf=monthScoreRepo.save(msf);
 			
 			
@@ -89,11 +103,12 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	}
 
 	@Override
-	public List<MonthScore> getMsByMember(Integer id) {
+	public List<MonthScore> getMsByMember(String token) {
 		// TODO Auto-generated method stub
-		Member m=memberRepo.findById(id).get();
 		
-		List<MonthScore> ms=monthScoreRepo.findByMember(m);
+		String username=jwtService.extractUsername(token);
+		User user=userRepo.findByUsername(username).get();		
+		List<MonthScore> ms=monthScoreRepo.findByMember(user.getMember());
 		return ms;
 	}
 

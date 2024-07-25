@@ -1,6 +1,7 @@
 package club_website.auth.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -57,13 +58,15 @@ public class Event implements Serializable{
 	
 	@Id
 	@Column(name = "event_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String title;
 	private String description;
-	private Date dateEvent;
 	private String place;
+	
+
+	private LocalDate dateEvent;
 	
 	@Builder.Default
 	private boolean deleted = Boolean.FALSE;
@@ -71,25 +74,25 @@ public class Event implements Serializable{
 	@ManyToOne()
     @JoinColumn(name = "created_by_id")
 	@JsonIgnoreProperties({"member"})
-	private User createdBy;
+	private Admin createdBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
+
+	private LocalDate createdAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "deleted_by_id")
 	@JsonIgnoreProperties({"works","departments","member"})
-	private User deletedBy;
+	private Admin deletedBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date deletedAt;
+
+	private LocalDate deletedAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "update_by_id")
-	private User updatedBy;
+	private Admin updatedBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
+
+	private LocalDate updatedAt;
 	
 	@Builder.Default
 	private boolean status=true;

@@ -1,6 +1,7 @@
 package club_website.auth.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -32,7 +33,7 @@ public class MonthScore implements Serializable{
 	
  	@Id
     @Column(name = "score_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer score_id;
  	
  	@ManyToOne
@@ -57,4 +58,10 @@ public class MonthScore implements Serializable{
 		double total=departsPoints+discipline+contribution;
 		return total!=0 ? total/3 : 0;
 	}
+	
+	private LocalDate updatedAt;
+	
+	@ManyToOne()
+	@JoinColumn(name = "update_by_id")
+	private Admin updatedBy;
 }

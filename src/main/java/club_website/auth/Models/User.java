@@ -68,7 +68,7 @@ public class User implements UserDetails, Serializable {
     
     @OneToOne(mappedBy ="user")
     @Nullable
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({"createdBy","user"})
     private Admin admin;
     
     private boolean enabled;

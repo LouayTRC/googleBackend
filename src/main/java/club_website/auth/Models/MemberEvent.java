@@ -1,7 +1,12 @@
 package club_website.auth.Models;
 
 
+import java.time.LocalDate;
 import java.util.Date;
+
+import org.springframework.cglib.core.Local;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,24 +32,24 @@ import lombok.Setter;
 public class MemberEvent {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne
 	@JoinColumn(name = "event_id", nullable = false)
+	@JsonIgnore
 	private Event event;
 	
 	@ManyToOne
 	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
 	private Member member;
 	
-	@Builder.Default
-	private boolean present=false;
+	private boolean present;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
+
+	private LocalDate updatedAt;
 	
 	@ManyToOne()
 	@JoinColumn(name = "update_by_id")
-	private User updatedBy;
+	private Admin updatedBy;
 }

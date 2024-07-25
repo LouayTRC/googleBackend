@@ -1,6 +1,7 @@
 package club_website.auth.ServiceImpl;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,8 +64,8 @@ public class MemberEventServiceImpl implements MemberEventService {
 		Optional<MemberEvent> me=memberEventRepo.findById(id);
 		if (me.isPresent()) {
 			me.get().setPresent(true);
-			me.get().setUpdatedAt(new Date());
-			me.get().setUpdatedBy(u);
+			me.get().setUpdatedAt(LocalDate.now());
+			me.get().setUpdatedBy(u.getAdmin());
 			return memberEventRepo.save(me.get());
 		}
 		return null;
@@ -85,8 +86,8 @@ public class MemberEventServiceImpl implements MemberEventService {
 		Optional<MemberEvent> me=memberEventRepo.findById(id);
 		if (me.isPresent()) {
 			me.get().setPresent(false);
-			me.get().setUpdatedAt(new Date());
-			me.get().setUpdatedBy(u);
+			me.get().setUpdatedAt(LocalDate.now());
+			me.get().setUpdatedBy(u.getAdmin());
 			return memberEventRepo.save(me.get());
 		}
 		return null;

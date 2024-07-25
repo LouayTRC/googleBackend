@@ -71,8 +71,7 @@ public class Member implements Serializable,Comparable<Member>{
     private Set<Department> departments = new HashSet<>();
 	
     @OneToMany(mappedBy = "member")
-//  @JsonManagedReference("user_work")
-    @JsonIgnoreProperties("member")
+    @JsonIgnore
     private List<Work> works;
     
     @OneToMany(mappedBy = "member")
