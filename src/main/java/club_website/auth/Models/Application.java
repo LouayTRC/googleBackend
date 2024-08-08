@@ -32,7 +32,7 @@ public class Application {
 	private String fullname;
 	private String mail;
 	private String depart;
-	private String facDepart;
+	private String classe;
 	private String reason;
 	private String skills;
 	private String clubsExperience;

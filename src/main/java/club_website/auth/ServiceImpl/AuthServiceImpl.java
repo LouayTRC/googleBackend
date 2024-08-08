@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public AuthenticationResponse register(RegisterRequest request) {
 		// TODO Auto-generated method stub
-//		System.out.println("req"+request);
+		System.out.println("req"+request);
 //		String imagePath = null;
 //	    if (request.getPdp() != null && !request.getPdp().isEmpty()) {
 //	        imagePath = storageService.uploadImage(request.getPdp());
