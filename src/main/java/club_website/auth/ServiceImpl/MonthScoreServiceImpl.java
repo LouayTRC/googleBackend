@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -78,7 +79,8 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		try {
 			String username=jwtService.extractUsername(token);
 			User user=userRepo.findByUsername(username).get();
-			
+			System.out.println(user);
+			System.out.println("zz"+ms);
 			MonthScore msf=monthScoreRepo.findById(id).get();
 			msf.setContribution(ms.getContribution());
 			msf.setDiscipline(ms.getDiscipline());
@@ -87,10 +89,12 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 			msf.setUpdatedBy(user.getAdmin());
 			msf=monthScoreRepo.save(msf);
 			
+			System.out.println("msf"+msf);
 			
 			Member m=memberRepo.findById(msf.getMember().getMember_id()).get();
 			m.setScore(m.calculScore());
-			memberRepo.save(m);
+			m=memberRepo.save(m);
+			System.out.println("m"+m);
 			
 			return msf;
 		} catch (Exception e) {
@@ -112,6 +116,20 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		return ms;
 	}
 
+	@Override
+	public List<MonthScore> getAllMs() {
+		// TODO Auto-generated method stub
+		return monthScoreRepo.findAll();
+	}
+
+	@Override
+	public MonthScore getMsById(Integer id) {
+		// TODO Auto-generated method stub
+		Optional<MonthScore> ms=monthScoreRepo.findById(id);
+		return ms.isPresent()?ms.get():null;
+	}
+	
+	
 	
 	
 }

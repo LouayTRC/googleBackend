@@ -41,4 +41,16 @@ public class MonthScoreController {
 	public List<MonthScore> getMonthsScoresByMember(@RequestHeader("Authorization") String token) {
 		return monthScoreService.getMsByMember(token.substring(7));
 	}
+	
+	@GetMapping("/all")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public List<MonthScore> getAllMs() {
+		return monthScoreService.getAllMs();
+	}
+	
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public MonthScore getMsById(@PathVariable Integer id) {
+		return monthScoreService.getMsById(id);
+	}
 }

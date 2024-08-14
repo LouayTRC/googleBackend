@@ -10,7 +10,6 @@ import club_website.auth.Models.MemberEvent;
 @Service
 public interface MemberEventService {
 	public List<MemberEvent> addPresence(Event e);
-	public MemberEvent memberPresent(Integer id,String token);
-	public MemberEvent memberAbsent(Integer id,String token);
+	public MemberEvent updatePresence(Integer id,boolean presence,String token);
 	public List<MemberEvent> getPresence(Integer id);
 }

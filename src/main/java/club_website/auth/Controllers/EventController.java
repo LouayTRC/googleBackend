@@ -63,17 +63,12 @@ public class EventController {
 		return eventService.updateEvent(id,e,token.substring(7));
 	}
 	
-	@PutMapping("/present/{id}")
+	@PutMapping("/update/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public MemberEvent memberPresent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
-		return memberEventService.memberPresent(id,token.substring(7));
+	public MemberEvent memberPresent(@PathVariable Integer id,@RequestBody boolean presence,@RequestHeader("Authorization") String token) {
+		return memberEventService.updatePresence(id,presence,token.substring(7));
 	}
 	
-	@PutMapping("/absent/{id}")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public MemberEvent memberAbsent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
-		return memberEventService.memberAbsent(id,token.substring(7));
-	}
 	
 	@GetMapping("/presence/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")

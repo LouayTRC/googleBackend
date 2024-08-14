@@ -13,4 +13,6 @@ public interface MonthScoreService {
 	
 	public MonthScore updateMonthScore(Integer id,MonthScore ms,String token);
 	public List<MonthScore> getMsByMember(String token);
+	public List<MonthScore> getAllMs();
+	public MonthScore getMsById(Integer id);
 }

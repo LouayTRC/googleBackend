@@ -2,6 +2,7 @@ package club_website.auth.ServiceImpl;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,21 +56,6 @@ public class MemberEventServiceImpl implements MemberEventService {
 		return membersEvent;
 	}
 
-	@Override
-	public MemberEvent memberPresent(Integer id,String token) {
-		// TODO Auto-generated method stub
-		String username=jwtService.extractUsername(token);
-		User u=userRepo.findByUsername(username).get();
-		
-		Optional<MemberEvent> me=memberEventRepo.findById(id);
-		if (me.isPresent()) {
-			me.get().setPresent(true);
-			me.get().setUpdatedAt(LocalDate.now());
-			me.get().setUpdatedBy(u.getAdmin());
-			return memberEventRepo.save(me.get());
-		}
-		return null;
-	}
 
 	@Override
 	public List<MemberEvent> getPresence(Integer id) {
@@ -79,14 +65,14 @@ public class MemberEventServiceImpl implements MemberEventService {
 	}
 
 	@Override
-	public MemberEvent memberAbsent(Integer id,String token) {
+	public MemberEvent updatePresence(Integer id,boolean presence,String token) {
 		// TODO Auto-generated method stub
 		String username=jwtService.extractUsername(token);
 		User u=userRepo.findByUsername(username).get();
 		Optional<MemberEvent> me=memberEventRepo.findById(id);
 		if (me.isPresent()) {
-			me.get().setPresent(false);
-			me.get().setUpdatedAt(LocalDate.now());
+			me.get().setPresent(presence);
+			me.get().setUpdatedAt(LocalDateTime.now());
 			me.get().setUpdatedBy(u.getAdmin());
 			return memberEventRepo.save(me.get());
 		}

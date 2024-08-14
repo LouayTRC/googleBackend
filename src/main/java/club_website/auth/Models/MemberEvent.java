@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.cglib.core.Local;
@@ -47,7 +48,7 @@ public class MemberEvent {
 	private boolean present;
 	
 
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 	
 	@ManyToOne()
 	@JoinColumn(name = "update_by_id")
