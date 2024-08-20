@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void activateMember(Integer id) {
+	public void activateUser(Integer id) {
 		// TODO Auto-generated method stub
 		try {
 			User u=userRepo.findById(id).get();

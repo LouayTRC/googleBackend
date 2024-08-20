@@ -56,8 +56,8 @@ public class UserController {
 //	}
 	
 	@PutMapping("/activate/{id}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('SUPER ADMIN')")
 	public void activateAccount(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
-		userService.activateMember(id);
+		userService.activateUser(id);
 	}
 }

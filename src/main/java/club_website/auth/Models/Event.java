@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +67,7 @@ public class Event implements Serializable{
 	private String place;
 	
 
-	private LocalDate dateEvent;
+	private LocalDateTime dateEvent;
 	
 	@Builder.Default
 	private boolean deleted = Boolean.FALSE;

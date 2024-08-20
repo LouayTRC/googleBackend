@@ -1,6 +1,7 @@
 package club_website.auth.ServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -93,7 +94,7 @@ public class EventServiceImpl implements EventService{
 	@Override
 	public Event updateStatus(Event e) {
 		// TODO Auto-generated method stub
-		if(e.getDateEvent().isBefore(LocalDate.now())) {
+		if(e.getDateEvent().isBefore(LocalDateTime.now())) {
 			e.setStatus(false);
 			e=eventRepo.save(e);
 		}

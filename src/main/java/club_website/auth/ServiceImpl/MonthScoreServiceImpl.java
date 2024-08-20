@@ -40,7 +40,7 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	private UserRepo userRepo;
 
 	@Override
-	@Scheduled(cron = "1 0 0 1 * *", zone = "Africa/Tunis")
+	@Scheduled(cron = "1 12 18 * * *", zone = "Africa/Tunis")
 	public void addMonthScore() {
 		// TODO Auto-generated method stub
 		try {

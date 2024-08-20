@@ -20,5 +20,5 @@ public interface UserService {
 	public List<Member> getMembersByDepart(Department dep);
 	public Set<Member> getMembersByEvent(Event e);
 	public void deleteUser(Integer id);
-	public void activateMember(Integer user_id);
+	public void activateUser(Integer user_id);
 }
