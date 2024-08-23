@@ -3,12 +3,14 @@ package club_website.auth.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,9 +57,9 @@ public class UserController {
 //		userService.deleteUser(id);
 //	}
 	
-	@PutMapping("/activate/{id}")
+	@PutMapping("/status/{id}")
 	@PreAuthorize("hasAuthority('SUPER ADMIN')")
-	public void activateAccount(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
-		userService.activateUser(id);
+	public ResponseEntity activateAccount(@PathVariable Integer id,@RequestBody boolean status) {
+		return userService.activateUser(id,status);
 	}
 }

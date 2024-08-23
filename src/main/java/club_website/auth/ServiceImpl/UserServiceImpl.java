@@ -9,12 +9,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import club_website.auth.Models.Admin;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Event;
 import club_website.auth.Models.Member;
+import club_website.auth.Models.ResponseMessage;
 import club_website.auth.Models.User;
 import club_website.auth.Repositories.AdminRepo;
 import club_website.auth.Repositories.MemberRepo;
@@ -92,17 +95,21 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void activateUser(Integer id) {
+	public ResponseEntity activateUser(Integer id,boolean status) {
 		// TODO Auto-generated method stub
 		try {
 			User u=userRepo.findById(id).get();
 			
-			u.setEnabled(true);
+			u.setEnabled(status);
 			userRepo.save(u);
-			System.out.println("account activated");
+			
+			ResponseMessage msg=new ResponseMessage("account status updated successfully");
+			return new ResponseEntity(msg, HttpStatus.OK);
+			
 		}catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("cannot activate account");
+			ResponseMessage msg=new ResponseMessage("cannot update Status");
+			return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
 		}
 		
 		

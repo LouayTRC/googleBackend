@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService{
 					userRoles.add(existingRole);
 				}
 				else {
-					if(creator.getUser().hasAuthority("OWNER")) {
+					if(creator.getUser().hasAuthority("OWNER") || creator.getUser().hasAuthority("SUPER ADMIN")) {
 						userRoles.add(existingRole);
 					}
 				}

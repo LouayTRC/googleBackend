@@ -60,7 +60,7 @@ public class Department implements Serializable {
     
     
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"department", "works"})
+    @JsonIgnoreProperties({"department", "works","createdBy","deletedBy","updatedBy"})
 //    @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
     

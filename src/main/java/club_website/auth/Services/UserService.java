@@ -3,6 +3,7 @@ package club_website.auth.Services;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import club_website.auth.Models.Admin;
@@ -20,5 +21,5 @@ public interface UserService {
 	public List<Member> getMembersByDepart(Department dep);
 	public Set<Member> getMembersByEvent(Event e);
 	public void deleteUser(Integer id);
-	public void activateUser(Integer user_id);
+	public ResponseEntity activateUser(Integer user_id,boolean status);
 }

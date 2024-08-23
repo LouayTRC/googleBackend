@@ -49,7 +49,7 @@ public class User implements UserDetails, Serializable {
     private String password;
     private String pdp;
  
-    
+    private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -71,7 +71,7 @@ public class User implements UserDetails, Serializable {
     @JsonIgnoreProperties({"createdBy","user"})
     private Admin admin;
     
-    private boolean enabled;
+    
     
     @JsonIgnore
     @Override
