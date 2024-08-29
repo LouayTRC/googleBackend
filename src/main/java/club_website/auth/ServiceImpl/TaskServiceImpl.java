@@ -1,6 +1,7 @@
 package club_website.auth.ServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -124,7 +125,8 @@ public class TaskServiceImpl implements TaskService{
 	@Override
 	public Task updateStatus(Task task) {
 		// TODO Auto-generated method stub
-		if(task.getDdl().before(new Date())) {
+		if(task.getDdl().isBefore(LocalDateTime.now())) {
+			System.out.println("uzzzz");
 			task.setStatus(false);
 			task=taskRepo.save(task);
 		}

@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,9 @@ public class Task implements Serializable {
     private String title;
     private String description;
     private Date dateCreation;
-    private Date ddl;
+    
+    
+    private LocalDateTime ddl;
     private String pic;
 
     @Builder.Default

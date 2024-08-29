@@ -2,6 +2,7 @@ package club_website.auth.ServiceImpl;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import club_website.auth.Config.JwtService;
 import club_website.auth.Models.Department;
+import club_website.auth.Models.Event;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.Task;
 import club_website.auth.Models.User;
@@ -84,8 +86,17 @@ public class WorkServiceImpl implements WorkService{
 	@Override
 	public List<Work> getAllWorks() {
 		// TODO Auto-generated method stub
-		return workRepo.findAllWorks();
+		
+		List<Work> works = workRepo.findAll();
+		for(Work w:works) {
+			if(w.getTask().getDdl().isBefore(LocalDateTime.now())) {
+				w.setStatus(false);
+				w=workRepo.save(w);
+			}
+		}
+		return works;
 	}
+	
 
 	@Override
 	public Work getWorkById(Integer id) {
@@ -111,9 +122,10 @@ public class WorkServiceImpl implements WorkService{
 				work.setUrl(url);
 				work.setStatus(false);
 				work.setDateDepo(LocalDate.now());
-				work=workRepo.save(work);
+				return workRepo.save(work);
 			}
-			return work;
+			return null;
+			
 		}catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("eerror submitting work");
@@ -147,7 +159,14 @@ public class WorkServiceImpl implements WorkService{
 		// TODO Auto-generated method stub
 		Optional<Member> m=memberRepo.findById(id);
 		if(m.isPresent()) {
-			return workRepo.findByMember(m.get());
+			List<Work> works = workRepo.findByMember(m.get());
+			for(Work w:works) {
+				if(w.getTask().getDdl().isBefore(LocalDateTime.now())) {
+					w.setStatus(false);
+					w=workRepo.save(w);
+				}
+			}
+			return works;
 		}
 		else return null;
 	}

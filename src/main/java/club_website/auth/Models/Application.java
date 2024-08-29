@@ -1,6 +1,7 @@
 package club_website.auth.Models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Application {
 	private String fullname;
 	private String mail;
 	private String depart;
-	private String classe;
+	private String education;
 	private String reason;
 	private String skills;
 	private String clubsExperience;
@@ -40,11 +41,13 @@ public class Application {
 	@Builder.Default
 	private Integer status=0;
 	
+	private LocalDateTime createdAt;
+	
 	@ManyToOne()
     @JoinColumn(name = "update_by_id")
 	private Admin updatedBy;
 	
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 	
 	
 	

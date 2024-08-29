@@ -102,7 +102,7 @@ public class EventServiceImpl implements EventService{
 	}
 
 	@Override
-	public void deleteEvent(Integer id,String token) {
+	public boolean deleteEvent(Integer id,String token) {
 		// TODO Auto-generated method stub
 		try {
 			String username=jwtService.extractUsername(token);
@@ -114,10 +114,12 @@ public class EventServiceImpl implements EventService{
 			event.setDeletedAt(LocalDate.now());
 			event.setDeletedBy(u.getAdmin());
 			eventRepo.save(event);
+			return true;
 		}
 		catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e);
+			return false;
 		}
 		
 	}

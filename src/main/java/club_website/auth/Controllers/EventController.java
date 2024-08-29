@@ -53,8 +53,8 @@ public class EventController {
 	
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public void deleteEvent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
-		eventService.deleteEvent(id,token.substring(7));
+	public boolean deleteEvent(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+		return eventService.deleteEvent(id,token.substring(7));
 	}
 	
 	@PutMapping("{id}")

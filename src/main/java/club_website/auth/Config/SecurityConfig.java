@@ -28,7 +28,7 @@ public class SecurityConfig{
 			.csrf()
 			.disable()
 			.authorizeHttpRequests()
-			.requestMatchers("/api/auth/**","/api/app/add","/api/dep")
+			.requestMatchers("/api/auth/**","/api/app/**","/api/dep","/api/mail")
 			.permitAll()
 			.requestMatchers("/api/role/**").hasAuthority("SUPER ADMIN")
 			.anyRequest()

@@ -20,6 +20,8 @@ import club_website.auth.Repositories.MonthScoreRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.MonthScoreService;
 import club_website.auth.Services.WorkService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @Service
 public class MonthScoreServiceImpl implements MonthScoreService{
@@ -38,25 +40,31 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	
 	@Autowired
 	private UserRepo userRepo;
-
+	
+	@Autowired
+	private EntityManager entityManager;
+	
+	@Transactional
 	@Override
-	@Scheduled(cron = "1 0 0 1 * *", zone = "Africa/Tunis")
+	@Scheduled(cron = "1 0 0 1 * *")
 	public void addMonthScore() {
 		// TODO Auto-generated method stub
 		try {
 			System.out.println("Scheduled task started");
 			List<Member> members=memberRepo.findAll();
+			System.out.println("members"+members);
 			for(Member m:members) {
 				
                 LocalDate date=LocalDate.now().minusMonths(1);
                 double departScore=workService.calculateAverageScoreForPreviousMonth(m);
                 
 				MonthScore ms = MonthScore.builder()
-		                .member(m)
+		                .member(entityManager.merge(m))
 		                .departsPoints(departScore)
 		                .year(date.getYear())
 		                .month(date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH))
 		                .build();
+				System.out.println("ms"+ms);
 				ms.setScore(ms.calculScore());
 				monthScoreRepo.save(ms);
 				
@@ -96,8 +104,9 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 			
 			Member m=memberRepo.findById(msf.getMember().getMember_id()).get();
 			m.setScore(m.calculScore());
-			m=memberRepo.save(m);
 			System.out.println("m"+m);
+			m=memberRepo.save(m);
+			System.out.println("m2"+m);
 			
 			return msf;
 		} catch (Exception e) {

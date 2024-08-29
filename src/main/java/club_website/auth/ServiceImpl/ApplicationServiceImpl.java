@@ -1,6 +1,7 @@
 package club_website.auth.ServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import club_website.auth.Models.User;
 import club_website.auth.Repositories.AppRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.ApplicationService;
+import club_website.auth.Services.MailService;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService{
@@ -26,9 +28,15 @@ public class ApplicationServiceImpl implements ApplicationService{
 	@Autowired
 	private UserRepo userRepo;
 	
+	@Autowired
+	private MailService mailService;
+	
+	
 	@Override
 	public Application addApp(Application app) {
 		// TODO Auto-generated method stub
+		app.setCreatedAt(LocalDateTime.now());
+		System.out.println("app"+app);
 		return appRepo.save(app);
 	}
 
@@ -39,28 +47,47 @@ public class ApplicationServiceImpl implements ApplicationService{
 	}
 
 	@Override
-	public Application updateStatus(Integer id,Integer status,String token) {
+	public boolean updateStatus(Integer id,Integer status,String token) {
 		// TODO Auto-generated method stub
 		try {
-			
+			System.out.println("aa"+id);
 			String username=jwtService.extractUsername(token);
 			User user=userRepo.findByUsername(username).get();
 			
 			Optional<Application> app=appRepo.findById(id);
+			System.out.println("app"+app.get());
 			if(app.isPresent()) {
 				Application aa=app.get();
-				aa.setStatus(status);
-				aa.setUpdatedAt(LocalDate.now());
-				aa.setUpdatedBy(user.getAdmin());
-				return appRepo.save(aa);
+				if(aa.getStatus()==0) {
+					aa.setStatus(status);
+					aa.setUpdatedAt(LocalDateTime.now());
+					aa.setUpdatedBy(user.getAdmin());
+					appRepo.save(aa);
+					if(status==1) {
+						System.out.println("lena");
+						mailService.sendApplicationAccept(aa);
+					}
+					if(status==-1) {
+						mailService.sendApplicationRefuse(aa);
+					}
+					return true;
+				}
+				return false;
 			}
-			return null;
+			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
-			return null;
+			return false;
 		}
 		
 		
+	}
+
+	@Override
+	public Application getApplicationById(Integer id) {
+		// TODO Auto-generated method stub.
+		Application app=appRepo.findById(id).get();
+		return app;
 	}
 	
 }

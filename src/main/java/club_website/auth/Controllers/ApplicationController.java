@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,14 +32,20 @@ public class ApplicationController {
 		return appService.getApplications();
 	}
 	
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Application getAppById(@PathVariable Integer id){
+		return appService.getApplicationById(id);
+	}
+	
 	@PostMapping("/add")
-	public Application addApp(Application app) {
+	public Application addApp(@RequestBody Application app) {
 		return appService.addApp(app);
 	}
 	
-	@PutMapping("/{id}/{status}")
+	@PutMapping("/update/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public Application updateStatus(@PathParam("id") Integer id,@PathParam("status") Integer status,@RequestHeader("Authorization") String token) {
+	public boolean updateStatus(@PathVariable Integer id,@RequestBody Integer status,@RequestHeader("Authorization") String token) {
 		return appService.updateStatus(id, status,token.substring(7));
 	}
 }

@@ -32,6 +32,7 @@ import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.AuthService;
+import club_website.auth.Services.MailService;
 import club_website.auth.Services.StorageService;
 import club_website.auth.Services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class AuthServiceImpl implements AuthService{
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 	private final StorageService storageService;
+	private final MailService mailService;
 	
 	@Override
 	public AuthenticationResponse register(RegisterRequest request) {
@@ -66,7 +68,7 @@ public class AuthServiceImpl implements AuthService{
 				.username(request.getUsername())
 				.mail(request.getMail())
 				.password(passwordEncoder.encode(request.getPassword()))
-				.pdp("")
+				.pdp(request.getPdp())
 				.build();
 		
 		Set<Role> userRoles = new HashSet<>();
@@ -85,6 +87,7 @@ public class AuthServiceImpl implements AuthService{
 		Member m=Member.builder().user(userRes).departments(memberDeps).build();
 		memberRepo.save(m);
 		var jwtToken=jwtService.generateToken(user);
+		mailService.creationAccount(userRes);
 		return AuthenticationResponse.builder().token(jwtToken).build();
 	}
 

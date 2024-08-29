@@ -22,6 +22,7 @@ import club_website.auth.Models.User;
 import club_website.auth.Repositories.AdminRepo;
 import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.UserRepo;
+import club_website.auth.Services.MailService;
 import club_website.auth.Services.UserService;
 
 @Service
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired 
 	private AdminRepo adminRepo;
+	
+	@Autowired
+	private MailService mailService;
 
 	@Override
 	public List<Member> getAllMembers() {
@@ -102,16 +106,16 @@ public class UserServiceImpl implements UserService{
 			if(!u.hasAuthority("OWNER")) {
 				u.setEnabled(status);
 				userRepo.save(u);
-				
-				ResponseMessage msg=new ResponseMessage("account status updated successfully");
+				mailService.accountStatusUpdated(u);
+				ResponseMessage msg=new ResponseMessage("account status updated successfully",true);
 				return new ResponseEntity(msg, HttpStatus.OK);
 			}
-			ResponseMessage msg=new ResponseMessage("OWNER account can't be modified ");
+			ResponseMessage msg=new ResponseMessage("OWNER account can't be modified ",false);
 			return new ResponseEntity(msg, HttpStatus.FORBIDDEN);
 			
 		}catch (Exception e) {
 			// TODO: handle exception
-			ResponseMessage msg=new ResponseMessage("cannot update Status");
+			ResponseMessage msg=new ResponseMessage("cannot update Status",false);
 			return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
 		}
 		
