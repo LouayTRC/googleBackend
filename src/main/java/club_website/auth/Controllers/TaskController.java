@@ -60,6 +60,7 @@ public class TaskController {
 	@PutMapping()
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public Task updateTask(@RequestBody Task t,@RequestHeader("Authorization") String token) {
+		System.out.println(t);
 		return taskService.updateTask(t,token.substring(7));
 	}
 }

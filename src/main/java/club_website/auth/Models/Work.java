@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.cglib.core.Local;
@@ -56,7 +57,7 @@ public class Work implements Serializable {
     private Member member;
 
     @Builder.Default
-    private LocalDate dateDepo = LocalDate.now();
+    private LocalDateTime dateDepo = LocalDateTime.now();
 
     @Builder.Default
     private boolean status = true;
@@ -67,6 +68,6 @@ public class Work implements Serializable {
 	private Admin updatedBy;
 	
 	
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 
 }

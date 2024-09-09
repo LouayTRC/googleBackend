@@ -11,6 +11,7 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.hibernate.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import club_website.auth.Config.JwtService;
@@ -82,11 +83,6 @@ public class EventServiceImpl implements EventService{
 		// TODO Auto-generated method stub
 		enableDeletedFilter(false);
         List<Event> events = eventRepo.findAll();
-		for(Event e:events) {
-			if(e.getDateEvent()!=null) {
-				e=updateStatus(e);
-			}
-		}
         disableDeletedFilter();
         return events;
 	}
@@ -150,7 +146,7 @@ public class EventServiceImpl implements EventService{
 			e.setDateEvent(event.getDateEvent());
 			e.setPlace(event.getPlace());
 			e.setDescription(event.getDescription());
-			
+			e.setPic(event.getPic());
 			
 			e.setUpdatedAt(LocalDate.now());
 			e.setUpdatedBy(u.getAdmin());
@@ -174,6 +170,19 @@ public class EventServiceImpl implements EventService{
         Session session = entityManager.unwrap(Session.class);
         session.disableFilter("deletedEventsFilter");
     }
+
+	@Override
+	@Scheduled(cron = "1 0 * * * *")
+	public void updateEventsStatus() {
+		// TODO Auto-generated method stub
+		List<Event> events = eventRepo.findAll();
+		for(Event e:events) {
+			if(e.getDateEvent()!=null) {
+				e=updateStatus(e);
+			}
+		}
+	}
 	
-	
+   
+    
 }

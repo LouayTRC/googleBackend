@@ -11,6 +11,7 @@ import java.util.Set;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import club_website.auth.Config.JwtService;
@@ -85,11 +86,6 @@ public class TaskServiceImpl implements TaskService{
 		
 		enableDeletedFilter(false);
 		List<Task> tasks=taskRepo.findAll();
-		for(Task t:tasks) {
-			if(t.getDdl()!=null) {
-				t=updateStatus(t);
-			}
-		}
         disableDeletedFilter();
         
         return tasks;
@@ -173,5 +169,18 @@ public class TaskServiceImpl implements TaskService{
         Session session = entityManager.unwrap(Session.class);
         session.disableFilter("deletedTasksFilter");
     }
+
+	@Override
+	@Scheduled(cron = "1 0 * * * *")
+	public void updateTasksStatus() {
+		// TODO Auto-generated method stub
+		List<Task> tasks=taskRepo.findAll();
+		for(Task t:tasks) {
+			if(t.getDdl()!=null) {
+				t=updateStatus(t);
+			}
+		}
+	}
 	
+    
 }

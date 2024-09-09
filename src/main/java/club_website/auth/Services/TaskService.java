@@ -17,4 +17,5 @@ public interface TaskService {
 	public Task updateStatus(Task task);
 	public List<Task> getTasksByDepartment(Department d);
 	public Task updateTask(Task t,String token);
+	public void updateTasksStatus();
 }

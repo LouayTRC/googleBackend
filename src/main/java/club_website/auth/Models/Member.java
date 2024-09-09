@@ -75,7 +75,7 @@ public class Member implements Serializable,Comparable<Member>{
     private List<Work> works;
     
     @OneToMany(mappedBy = "member")
-    @JsonIgnoreProperties("member")
+    @JsonIgnore
     private List<MonthScore> monthScores;
     
     public double calculScore() {

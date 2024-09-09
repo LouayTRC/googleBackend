@@ -1,7 +1,6 @@
 package club_website.auth.Config;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import club_website.auth.Models.Admin;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Member;
-import club_website.auth.Models.RegisterRequest;
 import club_website.auth.Models.Role;
 import club_website.auth.Models.User;
 import club_website.auth.Repositories.AdminRepo;
@@ -25,7 +23,7 @@ import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.AuthService;
 import lombok.RequiredArgsConstructor;
-
+import lombok.Value;
 @Configuration
 @RequiredArgsConstructor
 public class ProjectSeeder implements ApplicationRunner {
@@ -50,6 +48,12 @@ public class ProjectSeeder implements ApplicationRunner {
 	
 	@Autowired
 	private AdminRepo adminRepo;
+	
+	@org.springframework.beans.factory.annotation.Value("${app.owner.username}")
+    private String ownerUsername;
+
+    @org.springframework.beans.factory.annotation.Value("${app.owner.password}")
+    private String ownerPassword;
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -115,10 +119,10 @@ public class ProjectSeeder implements ApplicationRunner {
 			if(!userBD.isPresent()) {
 				var user=User.builder()
 						.fullname("louay tarchoun")
-						.username("louuu")
-						.mail("louaytrc@gmail.com")
-						.password(passwordEncoder.encode("louuu"))
-						.pdp("test")
+						.username(ownerUsername)
+						.mail("louaytrc2@gmail.com")
+						.password(passwordEncoder.encode(ownerPassword))
+						.pdp("https://firebasestorage.googleapis.com/v0/b/clubwebsite-9d189.appspot.com/o/users%2Faa.jpg?alt=media&token=d3114a4e-d196-4722-a73f-a382b617cab7")
 						.enabled(true)
 						.build();
 				

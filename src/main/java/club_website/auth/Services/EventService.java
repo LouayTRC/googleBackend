@@ -14,4 +14,5 @@ public interface EventService {
 	public boolean deleteEvent(Integer id,String token);
 	public Event getEventById(Integer id);
 	public Event updateEvent(Integer id,Event e,String token);
+	public void updateEventsStatus();
 }

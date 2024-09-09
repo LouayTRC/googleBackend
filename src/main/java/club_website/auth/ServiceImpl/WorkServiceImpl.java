@@ -67,7 +67,7 @@ public class WorkServiceImpl implements WorkService{
         		System.out.println("members"+members);
         		List<Work> works=new ArrayList<Work>();
     			for(Member m:members) {
-        				Work work=Work.builder().member(m).task(task).dateDepo(LocalDate.now())
+        				Work work=Work.builder().member(m).task(task).dateDepo(LocalDateTime.now())
                 				.build();
                 		works.add(workRepo.save(work));
     			}
@@ -121,7 +121,7 @@ public class WorkServiceImpl implements WorkService{
 			if(work!=null && work.isStatus() && work.getTask().isStatus() && work.getMember().getUser().getId()==u.getId() && !work.getTask().isDeleted() ) {
 				work.setUrl(url);
 				work.setStatus(false);
-				work.setDateDepo(LocalDate.now());
+				work.setDateDepo(LocalDateTime.now());
 				return workRepo.save(work);
 			}
 			return null;
@@ -142,7 +142,7 @@ public class WorkServiceImpl implements WorkService{
 			Work work=getWorkById(id);
 			if(work!=null  && !work.getUrl().equals("") ) {
 				work.setNote(note);
-				work.setUpdatedAt(LocalDate.now());
+				work.setUpdatedAt(LocalDateTime.now());
 				work.setUpdatedBy(u.getAdmin());
 				work=workRepo.save(work);
 			}

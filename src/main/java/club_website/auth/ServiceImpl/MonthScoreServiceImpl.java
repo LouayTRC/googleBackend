@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import club_website.auth.Config.JwtService;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.MonthScore;
+import club_website.auth.Models.UpdateMsRequest;
 import club_website.auth.Models.User;
 import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.MonthScoreRepo;
@@ -85,7 +86,7 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	}
 
 	@Override
-	public MonthScore updateMonthScore(Integer id, MonthScore ms,String token) {
+	public MonthScore updateMonthScore(Integer id, UpdateMsRequest ms,String token) {
 		// TODO Auto-generated method stub
 		try {
 			String username=jwtService.extractUsername(token);

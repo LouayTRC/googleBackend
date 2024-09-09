@@ -14,4 +14,6 @@ import lombok.NoArgsConstructor;
 public class ResponseMessage {
 	private String msg;
 	private boolean status;
+
+	//private int _status; //1 => success , 2 => infor, 3 => warning , =1 => error
 }
