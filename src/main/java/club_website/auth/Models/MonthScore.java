@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -63,7 +64,7 @@ public class MonthScore implements Serializable{
 		return total!=0 ? total/3 : 0;
 	}
 	
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 	
 	@ManyToOne()
 	@JoinColumn(name = "update_by_id")

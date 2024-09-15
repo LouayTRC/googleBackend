@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService{
 	    		t.setDepartment(dep);
 	    	    t.setDateCreation(new Date());
 	    	    
-	    	    t.setCratedAt(LocalDate.now());
+	    	    t.setCreatedAt(LocalDateTime.now());
 	    	    t.setCreatedBy(u.getAdmin());
 	    	    
 	    	    
@@ -101,7 +101,7 @@ public class TaskServiceImpl implements TaskService{
 			Task task = taskRepo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 			
 			task.setDeleted(true);
-			task.setDeletedAt(LocalDate.now());
+			task.setDeletedAt(LocalDateTime.now());
 			task.setDeletedBy(u.getAdmin());
 			taskRepo.save(task);
 			System.out.println("suppression effectue");	
@@ -147,7 +147,7 @@ public class TaskServiceImpl implements TaskService{
 			t.setDescription(task.getDescription());
 			t.setTitle(task.getTitle());
 			
-			t.setUpdatedAt(LocalDate.now());
+			t.setUpdatedAt(LocalDateTime.now());
 			t.setUpdatedBy(u.getAdmin());
 			
 			return taskRepo.save(t);

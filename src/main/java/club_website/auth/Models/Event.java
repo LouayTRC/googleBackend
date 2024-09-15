@@ -78,7 +78,7 @@ public class Event implements Serializable{
 	private Admin createdBy;
 	
 
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "deleted_by_id")
@@ -86,14 +86,14 @@ public class Event implements Serializable{
 	private Admin deletedBy;
 	
 
-	private LocalDate deletedAt;
+	private LocalDateTime deletedAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "update_by_id")
 	private Admin updatedBy;
 	
 
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 	
 	@Builder.Default
 	private boolean status=true;

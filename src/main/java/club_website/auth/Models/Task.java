@@ -80,20 +80,20 @@ public class Task implements Serializable {
 	private Admin createdBy;
 	
 
-	private LocalDate cratedAt;
+	private LocalDateTime createdAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "deleted_by_id")
 	private Admin deletedBy;
 	
 
-	private LocalDate deletedAt;
+	private LocalDateTime deletedAt;
 	
 	@ManyToOne()
     @JoinColumn(name = "update_by_id")
 	private Admin updatedBy;
 	
 
-	private LocalDate updatedAt;
+	private LocalDateTime updatedAt;
 	
 }

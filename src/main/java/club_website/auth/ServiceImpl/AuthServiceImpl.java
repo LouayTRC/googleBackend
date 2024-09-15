@@ -1,16 +1,13 @@
 package club_website.auth.ServiceImpl;
 
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +21,6 @@ import club_website.auth.Models.ChangePwdRequest;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.RegisterRequest;
-import club_website.auth.Models.ResponseMessage;
 import club_website.auth.Models.Role;
 import club_website.auth.Repositories.AdminRepo;
 import club_website.auth.Repositories.DepartmentRepo;
@@ -50,7 +46,6 @@ public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
-	private final StorageService storageService;
 	private final MailService mailService;
 	
 	@Override
@@ -174,7 +169,7 @@ public class AuthServiceImpl implements AuthService{
         
        
         
-        Admin admin=Admin.builder().user(userRes).createdAt(LocalDate.now()).createdBy(creator).build();
+        Admin admin=Admin.builder().user(userRes).createdAt(LocalDateTime.now()).createdBy(creator).build();
         System.out.println("adlun"+admin);
         adminRepo.save(admin);
 		

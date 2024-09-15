@@ -63,7 +63,7 @@ public class EventServiceImpl implements EventService{
 	        	 EventDeps.add(existingDep);
 	        }
 	        e.setDepartments(EventDeps);
-	        e.setCreatedAt(LocalDate.now());
+	        e.setCreatedAt(LocalDateTime.now());
 	        e.setCreatedBy(u.getAdmin());
 	        e=eventRepo.save(e);
 	        List<MemberEvent> memberEvents=presenceService.addPresence(e);
@@ -107,7 +107,7 @@ public class EventServiceImpl implements EventService{
 			Event event = eventRepo.findById(id).orElseThrow(() -> new RuntimeException("Event not found"));
 	        
 			event.setDeleted(true);
-			event.setDeletedAt(LocalDate.now());
+			event.setDeletedAt(LocalDateTime.now());
 			event.setDeletedBy(u.getAdmin());
 			eventRepo.save(event);
 			return true;
@@ -148,7 +148,7 @@ public class EventServiceImpl implements EventService{
 			e.setDescription(event.getDescription());
 			e.setPic(event.getPic());
 			
-			e.setUpdatedAt(LocalDate.now());
+			e.setUpdatedAt(LocalDateTime.now());
 			e.setUpdatedBy(u.getAdmin());
 			return eventRepo.save(e);
 		}

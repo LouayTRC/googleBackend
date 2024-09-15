@@ -2,6 +2,7 @@ package club_website.auth.Models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 
@@ -52,7 +53,7 @@ public class Admin implements Serializable{
 	@JsonIgnoreProperties({"admin","createdBy"})
     private User user;
 	
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	
 //	@JsonIgnoreProperties({"createdBy"})
 	@JsonIgnore

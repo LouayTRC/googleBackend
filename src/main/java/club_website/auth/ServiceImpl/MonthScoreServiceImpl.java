@@ -1,6 +1,7 @@
 package club_website.auth.ServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -97,7 +98,7 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 			msf.setContribution(ms.getContribution());
 			msf.setDiscipline(ms.getDiscipline());
 			msf.setScore(msf.calculScore());
-			msf.setUpdatedAt(LocalDate.now());
+			msf.setUpdatedAt(LocalDateTime.now());
 			msf.setUpdatedBy(user.getAdmin());
 			msf=monthScoreRepo.save(msf);
 			
