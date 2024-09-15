@@ -46,7 +46,6 @@ public class MemberEventServiceImpl implements MemberEventService {
 	public List<MemberEvent> addPresence(Event e) {
 		// TODO Auto-generated method stub
 		Set<Member> members=userService.getMembersByEvent(e);
-		System.out.println(members.size());
 		List<MemberEvent> membersEvent=new ArrayList<>();
 		for(Member m:members) {
 			MemberEvent me=MemberEvent.builder().event(e).member(m).build();

@@ -54,7 +54,6 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		try {
 			System.out.println("Scheduled task started");
 			List<Member> members=memberRepo.findAll();
-			System.out.println("members"+members);
 			for(Member m:members) {
 				
                 LocalDate date=LocalDate.now().minusMonths(1);
@@ -66,7 +65,6 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		                .year(date.getYear())
 		                .month(date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH))
 		                .build();
-				System.out.println("ms"+ms);
 				ms.setScore(ms.calculScore());
 				monthScoreRepo.save(ms);
 				
@@ -92,8 +90,6 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		try {
 			String username=jwtService.extractUsername(token);
 			User user=userRepo.findByUsername(username).get();
-			System.out.println(user);
-			System.out.println("zz"+ms);
 			MonthScore msf=monthScoreRepo.findById(id).get();
 			msf.setContribution(ms.getContribution());
 			msf.setDiscipline(ms.getDiscipline());
@@ -102,14 +98,9 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 			msf.setUpdatedBy(user.getAdmin());
 			msf=monthScoreRepo.save(msf);
 			
-			System.out.println("msf"+msf);
-			
 			Member m=memberRepo.findById(msf.getMember().getMember_id()).get();
 			m.setScore(m.calculScore());
-			System.out.println("m"+m);
-			m=memberRepo.save(m);
-			System.out.println("m2"+m);
-			
+			m=memberRepo.save(m);			
 			return msf;
 		} catch (Exception e) {
 			// TODO: handle exception

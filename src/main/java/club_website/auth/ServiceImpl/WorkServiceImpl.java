@@ -62,16 +62,13 @@ public class WorkServiceImpl implements WorkService{
 	public List<Work> addDepos(Task task) throws Exception{
 		// TODO Auto-generated method stub
         try {
-        		System.out.println("here");
         		List<Member> members=userService.getMembersByDepart(task.getDepartment());
-        		System.out.println("members"+members);
         		List<Work> works=new ArrayList<Work>();
     			for(Member m:members) {
         				Work work=Work.builder().member(m).task(task).dateDepo(LocalDateTime.now())
                 				.build();
                 		works.add(workRepo.save(work));
     			}
-        		System.out.println("depos"+works);
         		return works;
         }
 		catch (Exception e) {
@@ -113,11 +110,6 @@ public class WorkServiceImpl implements WorkService{
 			String username=jwtService.extractUsername(token);
 			User u=userRepo.findByUsername(username).get();
 			Work work=getWorkById(id);
-			System.out.println(work!=null);
-			System.out.println(work.isStatus());
-			System.out.println(work.getTask().isStatus());
-			System.out.println(work.getMember().getUser().getId()==u.getId());
-			System.out.println(!work.getTask().isDeleted());
 			if(work!=null && work.isStatus() && work.getTask().isStatus() && work.getMember().getUser().getId()==u.getId() && !work.getTask().isDeleted() ) {
 				work.setUrl(url);
 				work.setStatus(false);

@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import club_website.auth.Models.Admin;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Member;
@@ -22,9 +20,8 @@ import club_website.auth.Repositories.DepartmentRepo;
 import club_website.auth.Repositories.MemberRepo;
 import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
-import club_website.auth.Services.AuthService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+
 @Configuration
 @RequiredArgsConstructor
 public class ProjectSeeder implements ApplicationRunner {
@@ -34,12 +31,6 @@ public class ProjectSeeder implements ApplicationRunner {
 	
 	@Autowired
 	private DepartmentRepo departmentRepo;
-	
-	@Autowired
-	private AuthService authService;
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private UserRepo userRepo;
@@ -122,7 +113,7 @@ public class ProjectSeeder implements ApplicationRunner {
 						.fullname("louay tarchoun")
 						.username(ownerUsername)
 						.mail("louaytrc@gmail.com")
-						.password(passwordEncoder.encode(ownerPassword))
+						.password(ownerPassword)
 						.pdp("https://firebasestorage.googleapis.com/v0/b/clubwebsite-9d189.appspot.com/o/users%2Faa.jpg?alt=media&token=d3114a4e-d196-4722-a73f-a382b617cab7")
 						.enabled(true)
 						.build();

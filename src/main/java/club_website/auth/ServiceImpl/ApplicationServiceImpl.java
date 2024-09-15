@@ -36,7 +36,6 @@ public class ApplicationServiceImpl implements ApplicationService{
 	public Application addApp(Application app) {
 		// TODO Auto-generated method stub
 		app.setCreatedAt(LocalDateTime.now());
-		System.out.println("app"+app);
 		return appRepo.save(app);
 	}
 
@@ -50,12 +49,12 @@ public class ApplicationServiceImpl implements ApplicationService{
 	public boolean updateStatus(Integer id,Integer status,String token) {
 		// TODO Auto-generated method stub
 		try {
-			System.out.println("aa"+id);
+			
 			String username=jwtService.extractUsername(token);
 			User user=userRepo.findByUsername(username).get();
 			
 			Optional<Application> app=appRepo.findById(id);
-			System.out.println("app"+app.get());
+			
 			if(app.isPresent()) {
 				Application aa=app.get();
 				if(aa.getStatus()==0) {
@@ -64,7 +63,6 @@ public class ApplicationServiceImpl implements ApplicationService{
 					aa.setUpdatedBy(user.getAdmin());
 					appRepo.save(aa);
 					if(status==1) {
-						System.out.println("lena");
 						mailService.sendApplicationAccept(aa);
 					}
 					if(status==-1) {

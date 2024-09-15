@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -17,7 +18,8 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 	
-	private static final String SECRET_KEY="ZCHJgoqcOS3gih6iT0Mucq9uuxiH/zyvnsJ4hNOpW68MRQDbwuuI7vavh67OAUybYygbt8kl3/4MOnql69qI+SgFrlawljFj/ClP++soMVse7Vl/rptb9F1wBiq9C/OaDxdR6s1nt2GYw8tZz0eIJmf8AGIiBcg0o2nTcMQX2/F7gEb/zgvZrospPE0/bFhRVWe2UG1bvgj7lt3UHPYZJHjFCiqKzr626shhZwjg1z1kEALwAR7SejGUKLpTyGpx/iQg6ZBXZqEY38QNTPJSGnIgm6stBlzXrjnHh33HtzQGYz2AcbJY1GoVKEzPzhXweG304N5v6n8JY7z9LiqR9oxMaO7Frpwy39yeUbpw4L8=";
+	@Value("${app.hashKey}")
+	private String SECRET_KEY;
 	
 	public String generateToken(UserDetails userDetails) {
 		return generateToken(new HashMap<>(),userDetails);

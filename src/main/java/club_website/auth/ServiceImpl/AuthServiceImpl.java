@@ -51,13 +51,7 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public AuthenticationResponse register(RegisterRequest request) {
 		// TODO Auto-generated method stub
-		System.out.println("req"+request);
-//		String imagePath = null;
-//	    if (request.getPdp() != null && !request.getPdp().isEmpty()) {
-//	        imagePath = storageService.uploadImage(request.getPdp());
-//	    }
 		
-	    
 		var user=User.builder()
 				.fullname(request.getFullname())
 				.username(request.getUsername())
@@ -74,10 +68,8 @@ public class AuthServiceImpl implements AuthService{
         Set<Department> memberDeps = new HashSet<>();
         for (Department dep : request.getDepartments()) {
         	Department existingDep =departmentRepo.findById(dep.getId()).orElseThrow();
-        	 System.out.println(existingDep);
         	 memberDeps.add(existingDep);
         }
-        System.out.println(user);
 		User userRes=userRepo.save(user);
 		Member m=Member.builder().user(userRes).departments(memberDeps).build();
 		memberRepo.save(m);
@@ -104,9 +96,7 @@ public class AuthServiceImpl implements AuthService{
 			
 		
 		String username=jwtService.extractUsername(token);
-		System.out.println("username"+username);
 		Optional<User> user=userRepo.findByUsername(username);
-		System.out.println("user"+user.get());
 		if(user.isPresent() && jwtService.isTokenValid(token, user.get())) {
 			return VerificationToken.builder().user(user.get()).loggedIn(true).build();		
 		}
@@ -121,8 +111,7 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public AuthenticationResponse addAdmin(RegisterRequest request,String token) {
 		// TODO Auto-generated method stub
-		System.out.println("req2"+request);
-		
+
 		 String username=jwtService.extractUsername(token);
 	     Admin creator=userService.getAdminByUsername(username);
 	        
@@ -150,12 +139,9 @@ public class AuthServiceImpl implements AuthService{
 			}
 		}
 		
-		System.out.println("roles"+userRoles);
         user.setRoles(userRoles);
         user.setEnabled(true);
         User userRes=userRepo.save(user);
-        System.out.println("user"+userRes);
-        System.out.println(user.getAuthorities());
         if(user.hasAuthority("MEMBER")) {
         	
         	Set<Department> memberDeps = new HashSet<>();
@@ -170,7 +156,6 @@ public class AuthServiceImpl implements AuthService{
        
         
         Admin admin=Admin.builder().user(userRes).createdAt(LocalDateTime.now()).createdBy(creator).build();
-        System.out.println("adlun"+admin);
         adminRepo.save(admin);
 		
 		
@@ -182,7 +167,6 @@ public class AuthServiceImpl implements AuthService{
 	public boolean changePassword(ChangePwdRequest request,String token) {
 		// TODO Auto-generated method stub
 		String username=jwtService.extractUsername(token);
-		System.out.println("username"+username);
 		User user=userRepo.findByUsername(username).get();
 		if(user!=null) {
 			if (passwordEncoder.matches(request.getOldPwd(), user.getPassword())) {
