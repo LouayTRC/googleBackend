@@ -12,35 +12,20 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    
-    environment: googleClub
 
-    env:
-      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
-      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
-      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
-      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
-      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
-      HASH_KEY: ${{ secrets.HASH_KEY }}
-      AZURE_APP_NAME: googleBack
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Java version
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v1
         with:
           java-version: '17'
-          distribution: 'microsoft'
 
       - name: Build with Maven
         run: mvn clean install
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
@@ -49,29 +34,20 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'googleClub'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'googleBack'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DED0137C68B6494C88E83E819AACC800 }}
           package: '*.jar'
-          
