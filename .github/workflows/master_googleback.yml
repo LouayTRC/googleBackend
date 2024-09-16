@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Web App - googleBack
+name: Build and Deploy Docker Image to Azure Web App - googleBack
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-    
+    runs-on: ubuntu-latest 
+
     environment: googleClub
 
     env:
@@ -24,6 +24,7 @@ jobs:
       CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
       HASH_KEY: ${{ secrets.HASH_KEY }}
       AZURE_APP_NAME: googleBack
+
     steps:
       - uses: actions/checkout@v4
 
@@ -31,45 +32,41 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'microsoft'
+          distribution: 'microsoft'  
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package -DskipTests
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
         with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build . -t ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'googleClub'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write 
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: java-app
-          
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
-
-
-      - name: Deploy to Azure Web App
+      - name: Deploy Docker image to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'googleBack'
           slot-name: 'googleClub'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '*.jar'
+          images: ${{ secrets.DOCKER_USERNAME }}/myapp:latest
