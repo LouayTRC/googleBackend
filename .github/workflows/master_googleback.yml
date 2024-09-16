@@ -64,7 +64,14 @@ jobs:
       id-token: write 
 
     steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
+          
       - name: Deploy Docker image to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
