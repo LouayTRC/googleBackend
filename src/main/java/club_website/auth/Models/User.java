@@ -28,7 +28,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "User")
+@Table(name = "Users_table")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User implements UserDetails, Serializable {
 
