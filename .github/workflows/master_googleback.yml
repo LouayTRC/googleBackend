@@ -13,6 +13,20 @@ jobs:
   build:
     runs-on: windows-latest
 
+    environment: googleClub
+
+    env:
+      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
+      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
+      HASH_KEY: ${{ secrets.HASH_KEY }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -38,7 +52,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write 
 
     steps:
       - name: Download artifact from build job
@@ -49,9 +63,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8131059576FB4B00ABD6F28141D2ED87 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CE0D3394ACEF44FC98E3955DEFA6E927 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CA7D2BD2DDDA4597B06A269E6118F63A }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
