@@ -13,22 +13,6 @@ jobs:
   build:
     runs-on: windows-latest
 
-    environment: googleClub
-
-    env:
-      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
-      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
-      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
-      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
-      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
-      HASH_KEY: ${{ secrets.HASH_KEY }}
-      AZURE_APP_NAME: googleBack
-      AZURE_APP_PACKAGE_PATH: ./publish
-
     steps:
       - uses: actions/checkout@v4
 
@@ -51,19 +35,29 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'googleClub'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
       
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C6477A0278234D77A0009A7596877B71 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_57858D9D173E43F4AD77358582C64A83 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_29EA04856D244300954A8290AAEED7EB }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.AZURE_APP_NAME }}
-          package: ${{ env.AZURE_APP_PACKAGE_PATH }}
-          publish-profile: "${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}"
+          app-name: 'googleBack'
+          slot-name: 'Production'
+          package: '*.jar'
+          
