@@ -13,6 +13,20 @@ jobs:
   build:
     runs-on: windows-latest
 
+    environment: googleClub
+
+    env:
+      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
+      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
+      HASH_KEY: ${{ secrets.HASH_KEY }}
+      
     steps:
       - uses: actions/checkout@v4
 
@@ -51,4 +65,4 @@ jobs:
           app-name: 'googleBack'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_81C6F13B788C4E60AD2C7B33F99A250F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
