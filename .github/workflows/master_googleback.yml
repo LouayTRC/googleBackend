@@ -12,7 +12,21 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    
+    environment: googleClub
 
+    env:
+      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
+      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
+      HASH_KEY: ${{ secrets.HASH_KEY }}
+      AZURE_APP_NAME: googleBack
     steps:
       - uses: actions/checkout@v4
 
@@ -35,7 +49,7 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'googleClub'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -49,9 +63,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C6477A0278234D77A0009A7596877B71 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_57858D9D173E43F4AD77358582C64A83 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_29EA04856D244300954A8290AAEED7EB }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
