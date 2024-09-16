@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy JAR app to Azure Web App - googleBack
 
 on:
@@ -9,20 +12,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
-    environment: googleClub
-
-    env:
-      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
-      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
-      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
-      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
-      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
-      HASH_KEY: ${{ secrets.HASH_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -36,11 +25,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: googleBack
+          name: java-app
           path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
@@ -50,21 +38,20 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: googleBack
-
+          name: java-app
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          auth-type: IDENTITY
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8131059576FB4B00ABD6F28141D2ED87 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CE0D3394ACEF44FC98E3955DEFA6E927 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CA7D2BD2DDDA4597B06A269E6118F63A }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -72,5 +59,5 @@ jobs:
         with:
           app-name: 'googleBack'
           slot-name: 'Production'
-          package: 'target/*.jar'
-        
+          package: '*.jar'
+          
