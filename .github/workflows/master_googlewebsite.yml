@@ -122,9 +122,9 @@ jobs:
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
           
-          rm -f /site/wwwroot/app.jar;
-          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT;
-          cd /site/wwwroot;
+          rm -f site/wwwroot/app.jar;
+          rm -f site/wwwroot/auth-0.0.1-SNAPSHOT;
+          cd site/wwwroot;
           echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
           put auth-0.0.1-SNAPSHOT.jar -o app.jar;
           echo 'Upload complete. Verifying file...';
