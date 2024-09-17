@@ -65,12 +65,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    
-    environment: googleClub
 
-    FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
-    FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
-    FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
+    environment: googleClub
+    env:
+      FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
+      FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
+      FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
 
     steps:
       # Download the JAR artifact from the previous job
