@@ -67,6 +67,7 @@ jobs:
     needs: build
 
     environment: googleClub
+
     env:
       SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
       DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
@@ -117,8 +118,7 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           
-           lftp -f "
-          set ftp:ssl-allow yes;
+          lftp -f "
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
           
