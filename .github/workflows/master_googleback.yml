@@ -106,7 +106,7 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           lftp -f "
-          open ftps://$FTPS_SERVER
+          open $FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
 
           # Create the directory if it doesn't exist
