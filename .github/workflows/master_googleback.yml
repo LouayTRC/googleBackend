@@ -105,11 +105,13 @@ jobs:
           fi
           
           # Connect to FTPS and upload the JAR file
-          lftp -u $FTPS_USERNAME,$FTPS_PASSWORD -e "
-          set debug 1;
-          set ftp:ssl-allow yes;
-          open ftps://$FTPS_SERVER;
-          cd /site/wwwroot;
-          put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar;
+          
+          lftp -f "
+          open ftps://$FTPS_SERVER
+          user $FTPS_USERNAME $FTPS_PASSWORD
+          
+          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
+          # Upload the JAR file
+          put ./auth-0.0.1-SNAPSHOT.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
           bye
           "
