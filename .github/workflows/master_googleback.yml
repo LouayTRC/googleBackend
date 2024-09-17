@@ -37,18 +37,18 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Verify JAR file
+      - name: Verify JAR file in the target directory
         run: |
-          # Check if the JAR file was built correctly in the target directory
+          # Check if the JAR file was built correctly
           ls -l target/
           
-          # You should see the JAR file, for example: auth-0.0.1-SNAPSHOT.jar
+          # Fail the job if the JAR file is not present
           if [ ! -f "target/auth-0.0.1-SNAPSHOT.jar" ]; then
             echo "JAR file not found!"
             exit 1
           fi
 
-      - name: Upload JAR File
+      - name: Upload JAR File as an Artifact
         uses: actions/upload-artifact@v4
         with:
           name: java-app
@@ -59,13 +59,16 @@ jobs:
     needs: build
 
     steps:
-      - name: Download JAR File
+      - name: Download JAR File from Build
         uses: actions/download-artifact@v4
         with:
           name: java-app
-          path: ./auth-0.0.1-SNAPSHOT.jar # Download the JAR directly as a file
+          path: ./ # Download directly to the current directory
 
-      - name: Install FTP Client
+      - name: List Downloaded Files for Debugging
+        run: ls -l
+
+      - name: Install lftp Client
         run: sudo apt-get install -y lftp
 
       - name: Deploy to Azure Web App via FTPS
@@ -74,13 +77,19 @@ jobs:
           FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
         run: |
-          # Connect to the FTPS server and deploy the JAR
+          # Check if the JAR file exists locally
+          if [ ! -f "./auth-0.0.1-SNAPSHOT.jar" ]; then
+            echo "JAR file not found!"
+            exit 1
+          fi
+          
+          # Connect to FTPS and upload the JAR file
           lftp -f "
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
-          # Ensure the wwwroot directory exists
+          # Make sure the target directory exists
           mkdir -p /site/wwwroot
-          # Upload the JAR file to the remote server
+          # Upload the JAR file
           put ./auth-0.0.1-SNAPSHOT.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
           bye
           "
