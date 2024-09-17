@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
-          path: java-app.jar # Download the JAR file as a file instead of a directory
+          path: ./auth-0.0.1-SNAPSHOT.jar # Download the JAR directly as a file
 
       - name: Install FTP Client
         run: sudo apt-get install -y lftp
@@ -74,13 +74,13 @@ jobs:
           FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
         run: |
-          # Deploy the JAR file to Azure Web App via FTPS
+          # Connect to the FTPS server and deploy the JAR
           lftp -f "
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
           # Ensure the wwwroot directory exists
           mkdir -p /site/wwwroot
           # Upload the JAR file to the remote server
-          put java-app.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
+          put ./auth-0.0.1-SNAPSHOT.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
           bye
           "
