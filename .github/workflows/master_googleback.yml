@@ -105,15 +105,10 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           
-          lftp -f "
-          open ftps://$FTPS_SERVER
-          user $FTPS_USERNAME $FTPS_PASSWORD
-          
-          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
-          cd /site/wwwroot;
-          echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
-          put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar;
-          echo 'Upload complete. Verifying file...';
-          ls;
+          lftp -u googleBack\$googleBack,gokZxgrHsos2YcaTbZhluugNinT5hfglq1WtwwbaLnMeByn1vYKQEjl8XPrA -e "
+          set ftp:ssl-allow yes; # Enable SSL
+          open ftps://waws-prod-blu-293.ftp.azurewebsites.windows.net/site/wwwroott; # Connect to the FTPS server
+          cd /site/wwwroot; # Navigate to the deployment directory
+          ls -l; # List files to check connectivity
           bye
           "
