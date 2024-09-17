@@ -97,10 +97,6 @@ jobs:
 
       # Deploy the JAR file to Azure Web App via FTPS
       - name: Deploy to Azure Web App via FTPS
-        env:
-          FTPS_SERVER: $FTPS_SERVER
-          FTPS_USERNAME: $FTPS_USERNAME
-          FTPS_PASSWORD: $FTPS_PASSWORD
         run: |
           # Ensure the JAR file exists locally
           if [ ! -f "./auth-0.0.1-SNAPSHOT.jar" ]; then
