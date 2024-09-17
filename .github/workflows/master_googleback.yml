@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Web App - googleBack
+name: Build and Deploy Application via FTPS - googleBack
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest 
 
     environment: googleClub
 
@@ -23,6 +23,7 @@ jobs:
       CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
       CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
       HASH_KEY: ${{ secrets.HASH_KEY }}
+      AZURE_APP_NAME: googleBack
 
     steps:
       - uses: actions/checkout@v4
@@ -34,43 +35,35 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package -DskipTests
 
-
-      - name: Upload artifact for deployment job
+      - name: Upload JAR File
         uses: actions/upload-artifact@v4
         with:
-          name: googleBack
-          path: '${{ github.workspace }}/target/*.jar'
+          name: java-app
+          path: target/auth-0.0.1-SNAPSHOT.jar
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write
-
     steps:
-      - name: Download artifact from build job
+      - name: Download JAR File
         uses: actions/download-artifact@v4
         with:
-          name: googleBack
+          name: java-app
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          auth-type: IDENTITY
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+      - name: Install FTP Client
+        run: sudo apt-get install -y lftp
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'googleBack'
-          slot-name: 'Production'
-          package: 'target/*.jar'
-        
+      - name: Deploy to Azure Web App via FTPS
+        env:
+          FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
+          FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
+        run: |
+          lftp -f "
+          open ftps://$FTPS_SERVER
+          user $FTPS_USERNAME $FTPS_PASSWORD
+          mirror -R ./target /site/wwwroot
+          bye
+          "
