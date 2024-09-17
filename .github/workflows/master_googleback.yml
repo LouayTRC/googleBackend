@@ -23,7 +23,7 @@ jobs:
       CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
       CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
       HASH_KEY: ${{ secrets.HASH_KEY }}
-      AZURE_APP_NAME: googleBack
+      AZURE_APP_NAME: googleWebsite
       
 
 
@@ -73,6 +73,7 @@ jobs:
       FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
 
     steps:
+      # Download the JAR artifact from the previous job
       - name: Download JAR File
         uses: actions/download-artifact@v4
         with:
@@ -105,10 +106,16 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           
-          lftp -u louaytrc,A1z2e3r4@ -e "
-          set ftp:ssl-allow yes; #e Enable SSL
-          open ftps://waws-prod-blu-293.ftp.azurewebsites.windows.net/site/wwwroott; # Connect to the FTPS server
-          cd /site/wwwroot; # Navigate to the deployment directory
-          ls -l; # List files to check connectivity
+          lftp -f "
+          set ftp:ssl-allow yes;
+          open ftps://$FTPS_SERVER
+          user $FTPS_USERNAME $FTPS_PASSWORD
+          
+          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
+          cd /site/wwwroot;
+          echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
+          put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar;
+          echo 'Upload complete. Verifying file...';
+          ls;
           bye
           "
