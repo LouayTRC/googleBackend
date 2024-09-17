@@ -9,7 +9,7 @@ on:
       - master
   workflow_dispatch:
 
-environment: googleClub
+
 env:
     SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
     DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
