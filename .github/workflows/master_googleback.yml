@@ -118,10 +118,9 @@ jobs:
           # Connect to FTPS and upload the JAR file
           
           lftp -f "
-          set ftp:ssl-allow yes;
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
-          
+          set ftp:ssl-allow yes;
           rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
           cd /site/wwwroot;
           echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
