@@ -101,46 +101,9 @@ jobs:
           path: ./ 
 
 
-      - name: Debug FTPS Environment Variables
-        run: |
-          echo "FTPS_SERVER: $FTPS_SERVER"
-          echo "FTPS_USERNAME: $FTPS_USERNAME"
-          # Avoid printing sensitive data like passwords
-
-
-
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-
-
-      - name: Deploy to Azure Web App via FTPS
-        run: |
-          # Ensure the JAR file exists locally
-          if [ ! -f "./auth-0.0.1-SNAPSHOT.jar" ]; then
-            echo "JAR file not found after download!"
-            exit 1
-          fi
-          
-          # Connect to FTPS and upload the JAR file
-          
-          lftp -f "
-          set ftp:ssl-allow yes;
-          open ftps://$FTPS_SERVER
-          user $FTPS_USERNAME $FTPS_PASSWORD
-          
-          rm -f site/wwwroot/app.jar;
-          rm -f site/wwwroot/auth-0.0.1-SNAPSHOT;
-          cd site/wwwroot;
-          echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
-          put auth-0.0.1-SNAPSHOT.jar -o app.jar;
-          echo 'Upload complete. Verifying file...';
-          ls;
-          bye
-          "
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'googleWebsite'  # Your app name in Azure
+          app-name: ${{ env.AZURE_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./auth-0.0.1-SNAPSHOT.jar
