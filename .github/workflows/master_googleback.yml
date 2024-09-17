@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 name: Build and Deploy Application via FTPS - googleBack
-=======
-name: Build and Deploy Docker Image to Azure Web App - googleBack
->>>>>>> 4e9e5cc1f8fe237916a1e13f4e1bc87d4d57823e
 
 on:
   push:
@@ -36,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'microsoft'  
+          distribution: 'microsoft'
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
