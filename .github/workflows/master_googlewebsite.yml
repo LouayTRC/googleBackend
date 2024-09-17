@@ -9,7 +9,6 @@ on:
       - master
   workflow_dispatch:
 
-
 env:
     SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
     DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
@@ -32,8 +31,19 @@ jobs:
     runs-on: ubuntu-latest
 
     environment: googleClub
-      
 
+    env:
+      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
+      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
+      HASH_KEY: ${{ secrets.HASH_KEY }}
+      AZURE_APP_NAME: googleWebsite
 
     steps:
       # Checkout the code
@@ -75,6 +85,12 @@ jobs:
     needs: build
 
     environment: googleClub
+    env:
+      AZURE_APP_NAME: googleWebsite
+      FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
+      FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
+      FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
+      AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
     
     steps:
       
@@ -109,8 +125,8 @@ jobs:
           
           lftp -f "
           set ftp:ssl-allow yes;
-          open ftps://waws-prod-blu-367.ftp.azurewebsites.windows.net/site/wwwroot
-          user googleWebsite\$googleWebsite C7gmiki3PwZizCjrcGcxezTxMcunNbvCnNvCGpM6tXQvxPayeAYrp58eFAuv
+          open ftps://$FTPS_SERVER
+          user $FTPS_USERNAME $FTPS_PASSWORD
           
           rm -f site/wwwroot/app.jar;
           rm -f site/wwwroot/auth-0.0.1-SNAPSHOT;
