@@ -68,6 +68,16 @@ jobs:
 
     environment: googleClub
     env:
+      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+      CLUB_MAIL: ${{ secrets.CLUB_MAIL }}
+      CLUB_PASSWORD: ${{ secrets.CLUB_PASSWORD }}
+      HASH_KEY: ${{ secrets.HASH_KEY }}
       FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
       FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
       FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
@@ -106,16 +116,11 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           
-          lftp -f "
-          set ftp:ssl-allow yes;
-          open ftps://$FTPS_SERVER
-          user $FTPS_USERNAME $FTPS_PASSWORD
-          
-          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar;
-          cd /site/wwwroot;
-          echo 'Uploading auth-0.0.1-SNAPSHOT.jar...';
-          put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar;
-          echo 'Upload complete. Verifying file...';
-          ls;
+          lftp -u FTPS_USERNAME,FTPS_PASSWORD -e "
+          set ftp:ssl-allow yes; # Enable SSL if required
+          open ftps://$FTPS_SERVER;
+          cd /site/wwwroot; # Navigate to the deployment directory
+          put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar; # Upload the JAR file
+          ls; # List the directory contents to verify the file was uploaded
           bye
           "
