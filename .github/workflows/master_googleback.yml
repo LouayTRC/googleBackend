@@ -105,7 +105,7 @@ jobs:
           fi
           
           # Connect to FTPS and upload the JAR file
-          lftp -u $FTPS_USERNAME,$FTPS_PASSWORD -f "
+          lftp -u $FTPS_USERNAME,$FTPS_PASSWORD -e "
           set debug 1;
           set ftp:ssl-allow yes;
           open ftps://$FTPS_SERVER;
