@@ -61,9 +61,15 @@ jobs:
           FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
         run: |
+          # Check if the target directory exists and contains the JAR file
+          ls -l ./target
+
+          # Deploy using lftp
           lftp -f "
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
+          # Optionally create directories if needed
+          mkdir -p /site/wwwroot
           mirror -R ./target /site/wwwroot
           bye
           "
