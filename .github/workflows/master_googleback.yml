@@ -26,29 +26,35 @@ jobs:
       AZURE_APP_NAME: googleBack
 
     steps:
-      - uses: actions/checkout@v4
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      # Set up the Java version
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'microsoft'
 
+      # Build the project with Maven
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
+      # Verify the JAR file exists in the target directory
       - name: Verify JAR file in the target directory
         run: |
-          # Check if the JAR file was built correctly
+          echo "Listing target directory to verify the JAR file:"
           ls -l target/
           
           # Fail the job if the JAR file is not present
           if [ ! -f "target/auth-0.0.1-SNAPSHOT.jar" ]; then
-            echo "JAR file not found!"
+            echo "JAR file not found in target/ directory!"
             exit 1
           fi
 
-      - name: Upload JAR File as an Artifact
+      # Upload the built JAR as an artifact for deployment
+      - name: Upload JAR file as artifact
         uses: actions/upload-artifact@v4
         with:
           name: java-app
@@ -59,27 +65,31 @@ jobs:
     needs: build
 
     steps:
-      - name: Download JAR File from Build
+      # Download the JAR artifact from the previous job
+      - name: Download JAR File
         uses: actions/download-artifact@v4
         with:
           name: java-app
-          path: ./ # Download directly to the current directory
+          path: ./ # Download to current directory
 
-      - name: List Downloaded Files for Debugging
+      # List the downloaded JAR file to ensure it's there
+      - name: List downloaded JAR file
         run: ls -l
 
-      - name: Install lftp Client
+      # Install the lftp client for FTPS upload
+      - name: Install lftp
         run: sudo apt-get install -y lftp
 
+      # Deploy the JAR file to Azure Web App via FTPS
       - name: Deploy to Azure Web App via FTPS
         env:
           FTPS_SERVER: ${{ secrets.FTPS_SERVER }}
           FTPS_USERNAME: ${{ secrets.FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
         run: |
-          # Check if the JAR file exists locally
+          # Ensure the JAR file exists locally
           if [ ! -f "./auth-0.0.1-SNAPSHOT.jar" ]; then
-            echo "JAR file not found!"
+            echo "JAR file not found after download!"
             exit 1
           fi
           
@@ -87,9 +97,7 @@ jobs:
           lftp -f "
           open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
-          # Make sure the target directory exists
           mkdir -p /site/wwwroot
-          # Upload the JAR file
           put ./auth-0.0.1-SNAPSHOT.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
           bye
           "
