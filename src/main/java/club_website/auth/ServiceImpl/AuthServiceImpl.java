@@ -29,7 +29,6 @@ import club_website.auth.Repositories.RoleRepo;
 import club_website.auth.Repositories.UserRepo;
 import club_website.auth.Services.AuthService;
 import club_website.auth.Services.MailService;
-import club_website.auth.Services.StorageService;
 import club_website.auth.Services.UserService;
 import lombok.RequiredArgsConstructor;
 
