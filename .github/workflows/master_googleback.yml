@@ -118,7 +118,7 @@ jobs:
           
           lftp -u FTPS_USERNAME,FTPS_PASSWORD -e "
           set ftp:ssl-allow yes; # Enable SSL if required
-          open ftps://$FTPS_SERVER;
+          open $FTPS_SERVER;
           cd /site/wwwroot; # Navigate to the deployment directory
           put auth-0.0.1-SNAPSHOT.jar -o auth-0.0.1-SNAPSHOT.jar; # Upload the JAR file
           ls; # List the directory contents to verify the file was uploaded
