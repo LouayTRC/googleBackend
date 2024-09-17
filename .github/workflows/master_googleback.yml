@@ -105,8 +105,8 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           
-          lftp -u googleBack\$googleBack,gokZxgrHsos2YcaTbZhluugNinT5hfglq1WtwwbaLnMeByn1vYKQEjl8XPrA -e "
-          set ftp:ssl-allow yes; # Enable SSL
+          lftp -u louaytrc,A1z2e3r4@ -e "
+          set ftp:ssl-allow yes; #e Enable SSL
           open ftps://waws-prod-blu-293.ftp.azurewebsites.windows.net/site/wwwroott; # Connect to the FTPS server
           cd /site/wwwroot; # Navigate to the deployment directory
           ls -l; # List files to check connectivity
