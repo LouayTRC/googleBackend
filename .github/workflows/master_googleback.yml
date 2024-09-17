@@ -105,10 +105,11 @@ jobs:
           fi
           
           # Connect to FTPS and upload the JAR file
-          set ftp:ssl-allow no; #Disable SSL 
-          open $FTPS_SERVER; # Set FTP Server
-          user $FTPS_USERNAME $FTPS_PASSWORD; # Authenticate
-          mirror -X ./auth-0.0.1-SNAPSHOT.jar -X /site/wwwroot/auth-0.0.1-SNAPSHOT.jar --reverse --verbose --delete ./ ./; 
-
-          bye
-          "
+          lftp -e "
+            set ftp:ssl-allow yes; # Enable SSL if required by your FTPS server
+            open $FTPS_SERVER;
+            user $FTPS_USERNAME $FTPS_PASSWORD;
+            cd /site/wwwroot; # Navigate to the deployment directory
+            put -O . auth-0.0.1-SNAPSHOT.jar; # Upload the JAR file
+            bye
+          " -u $FTPS_USERNAME,$FTPS_PASSWORD
