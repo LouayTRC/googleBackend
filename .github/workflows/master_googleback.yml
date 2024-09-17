@@ -108,7 +108,7 @@ jobs:
           set ftp:ssl-allow no; #Disable SSL 
           open $FTPS_SERVER; # Set FTP Server
           user $FTPS_USERNAME $FTPS_PASSWORD; # Authenticate
-          mirror -X .* -X .*/ --reverse --verbose --delete ./ ./; 
-          
+          mirror -X ./auth-0.0.1-SNAPSHOT.jar -X /site/wwwroot/auth-0.0.1-SNAPSHOT.jar --reverse --verbose --delete ./ ./; 
+
           bye
           "
