@@ -106,10 +106,17 @@ jobs:
           
           # Connect to FTPS and upload the JAR file
           lftp -f "
-          open $FTPS_SERVER
+          open ftps://$FTPS_SERVER
           user $FTPS_USERNAME $FTPS_PASSWORD
+
+          # Create the directory if it doesn't exist
           mkdir -p /site/wwwroot
-          rm /site/wwwroot/auth-0.0.1-SNAPSHOT.jar || true
+
+          # Remove the existing file if it exists
+          rm -f /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
+
+          # Upload the JAR file
           put ./auth-0.0.1-SNAPSHOT.jar -o /site/wwwroot/auth-0.0.1-SNAPSHOT.jar
+
           bye
           "
