@@ -26,7 +26,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build \
+          docker buildx build \
             --build-arg APP_PORT=${{ secrets.APP_PORT }} \
             --build-arg DB_URL=${{ secrets.DB_URL }} \
             --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} \
@@ -36,8 +36,8 @@ jobs:
             --build-arg CLUB_MAIL=${{ secrets.CLUB_MAIL }} \
             --build-arg CLUB_PASSWORD=${{ secrets.CLUB_PASSWORD }} \
             --build-arg HASH_KEY=${{ secrets.HASH_KEY }} \
-            -t ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:latest .
-          docker push ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:latest
+            -t ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:latest \
+            --push .
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
