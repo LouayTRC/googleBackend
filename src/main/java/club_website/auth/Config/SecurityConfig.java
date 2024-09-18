@@ -38,6 +38,7 @@ public class SecurityConfig{
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authenticationProvider(authenticationProvider)
+			.httpBasic().disable()
 			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 		
 		
