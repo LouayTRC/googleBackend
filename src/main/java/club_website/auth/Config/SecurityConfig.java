@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 @Configuration
@@ -24,24 +25,25 @@ public class SecurityConfig{
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf()
-			.disable()
-			.authorizeHttpRequests()
-			.requestMatchers("/api/auth/**","/api/app/**","/api/dep","/api/mail")
-			.permitAll()
-			.requestMatchers("/api/role/**").hasAuthority("SUPER ADMIN")
-			.anyRequest()
-			.authenticated()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.authenticationProvider(authenticationProvider)
-			.httpBasic().disable()
-			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-		
-		
-		return http.build();
-	}
+        http
+            .csrf()
+            .disable()
+            .authorizeHttpRequests()
+            .requestMatchers("/api/auth/**", "/api/app/**", "/api/dep", "/api/mail")
+            .permitAll()
+            .requestMatchers("/api/role/**")
+            .hasAuthority("SUPER ADMIN")
+            .anyRequest()
+            .authenticated()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .httpBasic()
+            .authenticationEntryPoint(new BasicAuthenticationEntryPoint());
+
+        return http.build();
+    }
 }
