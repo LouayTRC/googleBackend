@@ -46,14 +46,6 @@ jobs:
         run: |
           docker buildx build \
             --tag ${{ secrets.REGISTRY_URL }}/my-app:latest \
-            --build-arg DB_URL=${{ secrets.DB_URL }} \
-            --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} \
-            --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            --build-arg OWNER_USERNAME=${{ secrets.OWNER_USERNAME }} \
-            --build-arg OWNER_PASSWORD=${{ secrets.OWNER_PASSWORD }} \
-            --build-arg CLUB_MAIL=${{ secrets.CLUB_MAIL }} \
-            --build-arg CLUB_PASSWORD=${{ secrets.CLUB_PASSWORD }} \
-            --build-arg HASH_KEY=${{ secrets.HASH_KEY }} \
             --push .
 
       - name: Deploy to Azure Web App
