@@ -115,13 +115,13 @@ public class ProjectSeeder implements ApplicationRunner {
 				deps.add(departmentRepo.findByName("Rh"));
 			}
 			
-			Optional<User> userBD=userRepo.findByUsername("louuu");
+			Optional<User> userBD=userRepo.findByUsername(ownerUsername);
 			
 			if(!userBD.isPresent()) {
 				var user=User.builder()
 						.fullname("louay tarchoun")
 						.username(ownerUsername)
-						.mail("louaytrc2@gmail.com")
+						.mail("louaytrc@gmail.com")
 						.password(passwordEncoder.encode(ownerPassword))
 						.pdp("https://firebasestorage.googleapis.com/v0/b/clubwebsite-9d189.appspot.com/o/users%2Faa.jpg?alt=media&token=d3114a4e-d196-4722-a73f-a382b617cab7")
 						.enabled(true)
