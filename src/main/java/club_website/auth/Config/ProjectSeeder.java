@@ -1,6 +1,7 @@
 package club_website.auth.Config;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -144,7 +145,7 @@ public class ProjectSeeder implements ApplicationRunner {
 	    		memberRepo.save(m);
 
 		        
-		        Admin admin=Admin.builder().user(userRes).createdAt(LocalDate.now()).build();
+		        Admin admin=Admin.builder().user(userRes).createdAt(LocalDateTime.now()).build();
 		        adminRepo.save(admin);
 		
 				System.out.println("Owner created successfully !");
