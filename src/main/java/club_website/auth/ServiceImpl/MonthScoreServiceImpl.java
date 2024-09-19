@@ -46,6 +46,12 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	@Autowired
 	private EntityManager entityManager;
 	
+	@Scheduled(fixedRate = 60000)
+	public void keepAliveTask() {
+	    // Perform a lightweight operation, like a simple log
+	    System.out.println("Keeping app alive");
+	}
+	
 	@Transactional
 	@Override
 	@Scheduled(cron = "1 0 0 1 * *")
