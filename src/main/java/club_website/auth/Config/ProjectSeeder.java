@@ -56,6 +56,21 @@ public class ProjectSeeder implements ApplicationRunner {
 
 		try {
 			Set<Role> roles = new HashSet<>();
+			
+			if (!roleRepo.existsByName("OWNER")) {
+				Role r1 = Role.builder().name("OWNER").build();
+				roles.add(roleRepo.save(r1));
+			} else {
+				roles.add(roleRepo.findByName("OWNER"));
+			}
+			
+			if (!roleRepo.existsByName("SUPER ADMIN")) {
+				Role r3 = Role.builder().name("SUPER ADMIN").build();
+				roles.add(roleRepo.save(r3));
+			} else {
+				roles.add(roleRepo.findByName("SUPER ADMIN"));
+			}
+			
 			if (!roleRepo.existsByName("ADMIN")) {
 				Role r1 = Role.builder().name("ADMIN").build();
 				roles.add(roleRepo.save(r1));
@@ -71,19 +86,7 @@ public class ProjectSeeder implements ApplicationRunner {
 				roles.add(roleRepo.findByName("MEMBER"));
 			}
 			
-			if (!roleRepo.existsByName("OWNER")) {
-				Role r1 = Role.builder().name("OWNER").build();
-				roles.add(roleRepo.save(r1));
-			} else {
-				roles.add(roleRepo.findByName("OWNER"));
-			}
-			
-			if (!roleRepo.existsByName("SUPER ADMIN")) {
-				Role r3 = Role.builder().name("SUPER ADMIN").build();
-				roles.add(roleRepo.save(r3));
-			} else {
-				roles.add(roleRepo.findByName("SUPER ADMIN"));
-			}
+		
 
 			Set<Department> deps = new HashSet<>();
 			if (!departmentRepo.existsByName("Dev")) {

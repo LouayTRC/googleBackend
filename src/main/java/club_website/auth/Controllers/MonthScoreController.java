@@ -33,6 +33,7 @@ public class MonthScoreController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public MonthScore updateMonthScore(@PathVariable Integer id,@RequestBody MonthScore ms,@RequestHeader("Authorization") String token) {
+		System.out.println("!d"+ms);
 		return monthScoreService.updateMonthScore(id,ms, token.substring(7));
 	}
 	

@@ -99,12 +99,15 @@ public class UserServiceImpl implements UserService{
 		// TODO Auto-generated method stub
 		try {
 			User u=userRepo.findById(id).get();
-			
-			u.setEnabled(status);
-			userRepo.save(u);
-			
-			ResponseMessage msg=new ResponseMessage("account status updated successfully");
-			return new ResponseEntity(msg, HttpStatus.OK);
+			if(!u.hasAuthority("OWNER")) {
+				u.setEnabled(status);
+				userRepo.save(u);
+				
+				ResponseMessage msg=new ResponseMessage("account status updated successfully");
+				return new ResponseEntity(msg, HttpStatus.OK);
+			}
+			ResponseMessage msg=new ResponseMessage("OWNER account can't be modified ");
+			return new ResponseEntity(msg, HttpStatus.FORBIDDEN);
 			
 		}catch (Exception e) {
 			// TODO: handle exception

@@ -20,9 +20,11 @@ import club_website.auth.Config.JwtService;
 import club_website.auth.Models.Admin;
 import club_website.auth.Models.AuthenticationRequest;
 import club_website.auth.Models.AuthenticationResponse;
+import club_website.auth.Models.ChangePwdRequest;
 import club_website.auth.Models.Department;
 import club_website.auth.Models.Member;
 import club_website.auth.Models.RegisterRequest;
+import club_website.auth.Models.ResponseMessage;
 import club_website.auth.Models.Role;
 import club_website.auth.Repositories.AdminRepo;
 import club_website.auth.Repositories.DepartmentRepo;
@@ -177,6 +179,25 @@ public class AuthServiceImpl implements AuthService{
 		var jwtToken=jwtService.generateToken(user);
 		return AuthenticationResponse.builder().token(jwtToken).build();
 	}
+
+	@Override
+	public boolean changePassword(ChangePwdRequest request,String token) {
+		// TODO Auto-generated method stub
+		String username=jwtService.extractUsername(token);
+		System.out.println("username"+username);
+		User user=userRepo.findByUsername(username).get();
+		if(user!=null) {
+			if (passwordEncoder.matches(request.getOldPwd(), user.getPassword())) {
+	            user.setPassword(passwordEncoder.encode(request.getNewPwd()));
+	            userRepo.save(user);
+	            return true;
+	        } else {
+	        	return false;
+	        }
+		}
+		return false;
+	}
+	
 	
 	
 }

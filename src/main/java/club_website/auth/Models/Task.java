@@ -51,6 +51,7 @@ public class Task implements Serializable {
     private String description;
     private Date dateCreation;
     private Date ddl;
+    private String pic;
 
     @Builder.Default
     private boolean status = true;

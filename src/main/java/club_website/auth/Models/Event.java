@@ -65,7 +65,7 @@ public class Event implements Serializable{
 	private String title;
 	private String description;
 	private String place;
-	
+	private String pic;
 
 	private LocalDateTime dateEvent;
 	

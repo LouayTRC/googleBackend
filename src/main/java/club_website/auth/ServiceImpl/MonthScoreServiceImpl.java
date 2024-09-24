@@ -40,7 +40,7 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 	private UserRepo userRepo;
 
 	@Override
-	@Scheduled(cron = "1 12 18 * * *", zone = "Africa/Tunis")
+	@Scheduled(cron = "1 0 0 1 * *", zone = "Africa/Tunis")
 	public void addMonthScore() {
 		// TODO Auto-generated method stub
 		try {
@@ -59,6 +59,9 @@ public class MonthScoreServiceImpl implements MonthScoreService{
 		                .build();
 				ms.setScore(ms.calculScore());
 				monthScoreRepo.save(ms);
+				
+				m.setScore(m.calculScore());
+				memberRepo.save(m);
 				System.out.println("Month Score added for Member : "+m.getUser().getUsername());
 			}
 			System.out.println("Scheduled task finished");
