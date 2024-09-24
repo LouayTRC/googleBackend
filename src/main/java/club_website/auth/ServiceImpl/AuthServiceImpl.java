@@ -120,7 +120,7 @@ public class AuthServiceImpl implements AuthService{
 				.username(request.getUsername())
 				.mail(request.getMail())
 				.password(passwordEncoder.encode(request.getPassword()))
-				.pdp("")
+				.pdp(request.getPdp())
 				.build();
 		
 		Set<Role> userRoles = new HashSet<>();
