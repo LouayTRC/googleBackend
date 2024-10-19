@@ -80,6 +80,10 @@
     		<artifactId>hibernate-core</artifactId>
     		<version>6.6.0.Final</version> 
 		</dependency>
+		<dependency>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+</dependency>
     </dependencies>
     <build>
 		<defaultGoal>install</defaultGoal>
